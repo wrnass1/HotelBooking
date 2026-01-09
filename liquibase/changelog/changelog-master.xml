@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <include file="001-create-users-table.sql"/>
+    <include file="002-create-hotels-table.sql"/>
+    <include file="003-create-facilities-table.sql"/>
+    <include file="004-create-hotel-facilities-table.sql"/>
+    <include file="005-create-rooms-table.sql"/>
+    <include file="006-create-amenities-table.sql"/>
+    <include file="007-create-room-amenities-table.sql"/>
+    <include file="008-create-bookings-table.sql"/>
+    <include file="009-create-api-keys-table.sql"/>
+
+</databaseChangeLog>

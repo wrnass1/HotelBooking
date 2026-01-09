@@ -1,0 +1,18 @@
+using FluentValidation;
+using HotelBooking.Models.DTO;
+
+namespace HotelBooking.Validators;
+
+public class CreateFacilityDtoValidator : AbstractValidator<CreateFacilityDto>
+{
+    public CreateFacilityDtoValidator()
+    {
+        RuleFor(x => x.Name)
+            .NotEmpty().WithMessage("Facility name is required")
+            .MaximumLength(100).WithMessage("Facility name must not exceed 100 characters");
+
+        RuleFor(x => x.Icon)
+            .NotEmpty().WithMessage("Icon is required")
+            .MaximumLength(50).WithMessage("Icon must not exceed 50 characters");
+    }
+}
