@@ -1,0 +1,78 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: hotelbooking-postgres
+    environment:
+      POSTGRES_DB: hotelbooking
+      POSTGRES_USER: hotelbooking_user
+      POSTGRES_PASSWORD: hotelbooking_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hotelbooking_user"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: hotelbooking-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  liquibase:
+    image: liquibase/liquibase:latest
+    container_name: hotelbooking-liquibase
+    command: 
+      - --changeLogFile=changelog-master.xml
+      - --searchPath=/changelog
+      - --url=jdbc:postgresql://postgres:5432/hotelbooking
+      - --username=hotelbooking_user
+      - --password=hotelbooking_password
+      - --driver=org.postgresql.Driver
+      - --classpath=/liquibase/lib/postgresql-42.7.1.jar
+      - update
+    volumes:
+      - ./liquibase/changelog:/changelog
+      - ./liquibase/lib:/liquibase/lib:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: hotelbooking-api
+    ports:
+      - "8080:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=hotelbooking;Username=hotelbooking_user;Password=hotelbooking_password
+      - Redis__ConnectionString=redis:6379
+      - ConnectionStrings__Redis=redis:6379
+      - JwtSettings__SecretKey=YourSuperSecretKeyForJWTTokenGenerationThatShouldBeAtLeast32CharactersLong
+      - JwtSettings__Issuer=HotelBooking
+      - JwtSettings__Audience=HotelBooking
+      - JwtSettings__ExpiryMinutes=60
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      liquibase:
+        condition: service_completed_successfully
+
+volumes:
+  postgres_data:
+  redis_data:
