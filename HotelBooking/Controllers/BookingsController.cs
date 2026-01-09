@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using HotelBooking.Models.DTO;
 using HotelBooking.Services.Interfaces;
@@ -6,6 +7,8 @@ namespace HotelBooking.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Produces("application/json")]
+[Authorize]
 public class BookingsController : ControllerBase
 {
     private readonly IBookingService _bookingService;
@@ -17,157 +20,131 @@ public class BookingsController : ControllerBase
         _logger = logger;
     }
 
+    /// <summary>
+    /// Get all bookings
+    /// </summary>
     [HttpGet]
+    [ProducesResponseType(typeof(IEnumerable<BookingDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [Authorize(Roles = "Admin,Manager")]
     public async Task<ActionResult<IEnumerable<BookingDto>>> GetAllBookings()
     {
-        try
-        {
-            var bookings = await _bookingService.GetAllBookingsAsync();
-            return Ok(bookings);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error getting all bookings");
-            return StatusCode(500, "An error occurred while retrieving bookings");
-        }
+        var bookings = await _bookingService.GetAllBookingsAsync();
+        return Ok(bookings);
     }
 
+    /// <summary>
+    /// Get bookings by room ID
+    /// </summary>
     [HttpGet("room/{roomId}")]
+    [ProducesResponseType(typeof(IEnumerable<BookingDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [Authorize(Roles = "Admin,Manager")]
     public async Task<ActionResult<IEnumerable<BookingDto>>> GetBookingsByRoom(int roomId)
     {
-        try
-        {
-            var bookings = await _bookingService.GetBookingsByRoomIdAsync(roomId);
-            return Ok(bookings);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error getting bookings for room {RoomId}", roomId);
-            return StatusCode(500, "An error occurred while retrieving bookings");
-        }
+        var bookings = await _bookingService.GetBookingsByRoomIdAsync(roomId);
+        return Ok(bookings);
     }
 
+    /// <summary>
+    /// Get bookings by guest email
+    /// </summary>
     [HttpGet("guest/{email}")]
+    [ProducesResponseType(typeof(IEnumerable<BookingDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [Authorize(Roles = "Admin,Manager")]
     public async Task<ActionResult<IEnumerable<BookingDto>>> GetBookingsByGuest(string email)
     {
-        try
-        {
-            var bookings = await _bookingService.GetBookingsByGuestEmailAsync(email);
-            return Ok(bookings);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error getting bookings for guest {Email}", email);
-            return StatusCode(500, "An error occurred while retrieving bookings");
-        }
+        var bookings = await _bookingService.GetBookingsByGuestEmailAsync(email);
+        return Ok(bookings);
     }
 
+    /// <summary>
+    /// Get booking by ID
+    /// </summary>
     [HttpGet("{id}")]
+    [ProducesResponseType(typeof(BookingDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<BookingDto>> GetBooking(int id)
     {
-        try
-        {
-            var booking = await _bookingService.GetBookingByIdAsync(id);
-            if (booking == null)
-                return NotFound($"Booking with id {id} not found");
+        var booking = await _bookingService.GetBookingByIdAsync(id);
+        if (booking == null)
+            return NotFound();
 
-            return Ok(booking);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error getting booking {BookingId}", id);
-            return StatusCode(500, "An error occurred while retrieving the booking");
-        }
+        return Ok(booking);
     }
 
+    /// <summary>
+    /// Create a new booking
+    /// </summary>
     [HttpPost]
+    [ProducesResponseType(typeof(BookingDto), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [AllowAnonymous]
     public async Task<ActionResult<BookingDto>> CreateBooking([FromBody] CreateBookingDto createBookingDto)
     {
-        try
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
 
-            var booking = await _bookingService.CreateBookingAsync(createBookingDto);
-            return CreatedAtAction(nameof(GetBooking), new { id = booking.Id }, booking);
-        }
-        catch (ArgumentException ex)
-        {
-            return BadRequest(ex.Message);
-        }
-        catch (InvalidOperationException ex)
-        {
-            return BadRequest(ex.Message);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error creating booking");
-            return StatusCode(500, "An error occurred while creating the booking");
-        }
+        var booking = await _bookingService.CreateBookingAsync(createBookingDto);
+        return CreatedAtAction(nameof(GetBooking), new { id = booking.Id }, booking);
     }
 
+    /// <summary>
+    /// Update booking
+    /// </summary>
     [HttpPut("{id}")]
+    [ProducesResponseType(typeof(BookingDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [Authorize(Roles = "Admin,Manager")]
     public async Task<ActionResult<BookingDto>> UpdateBooking(int id, [FromBody] UpdateBookingDto updateBookingDto)
     {
-        try
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
 
-            var booking = await _bookingService.UpdateBookingAsync(id, updateBookingDto);
-            if (booking == null)
-                return NotFound($"Booking with id {id} not found");
+        var booking = await _bookingService.UpdateBookingAsync(id, updateBookingDto);
+        if (booking == null)
+            return NotFound();
 
-            return Ok(booking);
-        }
-        catch (ArgumentException ex)
-        {
-            return BadRequest(ex.Message);
-        }
-        catch (InvalidOperationException ex)
-        {
-            return BadRequest(ex.Message);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error updating booking {BookingId}", id);
-            return StatusCode(500, "An error occurred while updating the booking");
-        }
+        return Ok(booking);
     }
 
+    /// <summary>
+    /// Delete booking
+    /// </summary>
     [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteBooking(int id)
     {
-        try
-        {
-            var deleted = await _bookingService.DeleteBookingAsync(id);
-            if (!deleted)
-                return NotFound($"Booking with id {id} not found");
+        var deleted = await _bookingService.DeleteBookingAsync(id);
+        if (!deleted)
+            return NotFound();
 
-            return NoContent();
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error deleting booking {BookingId}", id);
-            return StatusCode(500, "An error occurred while deleting the booking");
-        }
+        return NoContent();
     }
 
+    /// <summary>
+    /// Cancel booking
+    /// </summary>
     [HttpPost("{id}/cancel")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> CancelBooking(int id)
     {
-        try
-        {
-            var cancelled = await _bookingService.CancelBookingAsync(id);
-            if (!cancelled)
-                return NotFound($"Booking with id {id} not found");
+        var cancelled = await _bookingService.CancelBookingAsync(id);
+        if (!cancelled)
+            return NotFound();
 
-            return Ok(new { message = "Booking cancelled successfully" });
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error cancelling booking {BookingId}", id);
-            return StatusCode(500, "An error occurred while cancelling the booking");
-        }
+        return Ok(new { message = "Booking cancelled successfully" });
     }
 }

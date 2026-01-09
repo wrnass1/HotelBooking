@@ -28,5 +28,24 @@ public class MappingProfile : Profile
         CreateMap<CreateBookingDto, Booking>();
         CreateMap<UpdateBookingDto, Booking>()
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+        // Facility mappings
+        CreateMap<Facility, FacilityDto>();
+        CreateMap<CreateFacilityDto, Facility>();
+        CreateMap<UpdateFacilityDto, Facility>()
+            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+        // Amenity mappings
+        CreateMap<Amenity, AmenityDto>();
+        CreateMap<CreateAmenityDto, Amenity>();
+        CreateMap<UpdateAmenityDto, Amenity>()
+            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+        // ApiKey mappings
+        CreateMap<ApiKey, ApiKeyDto>();
+        CreateMap<CreateApiKeyDto, ApiKey>();
+
+        // User mappings
+        CreateMap<User, UserDto>();
     }
 }

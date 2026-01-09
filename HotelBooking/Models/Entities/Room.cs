@@ -16,4 +16,5 @@ public class Room
     // Navigation properties
     public Hotel Hotel { get; set; } = null!;
     public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
+    public ICollection<RoomAmenity> RoomAmenities { get; set; } = new List<RoomAmenity>();
 }

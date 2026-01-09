@@ -1,3 +1,4 @@
+using HotelBooking.Models.DTO;
 using HotelBooking.Models.Entities;
 
 namespace HotelBooking.Repositories.Interfaces;
@@ -5,6 +6,7 @@ namespace HotelBooking.Repositories.Interfaces;
 public interface IHotelRepository
 {
     Task<IEnumerable<Hotel>> GetAllAsync();
+    Task<PagedResult<Hotel>> GetPagedAsync(HotelQueryDto query);
     Task<Hotel?> GetByIdAsync(int id);
     Task<Hotel> CreateAsync(Hotel hotel);
     Task<Hotel> UpdateAsync(Hotel hotel);

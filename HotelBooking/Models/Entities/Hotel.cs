@@ -12,6 +12,7 @@ public class Hotel
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? UpdatedAt { get; set; }
     
-    // Navigation property
+    // Navigation properties
     public ICollection<Room> Rooms { get; set; } = new List<Room>();
+    public ICollection<HotelFacility> HotelFacilities { get; set; } = new List<HotelFacility>();
 }

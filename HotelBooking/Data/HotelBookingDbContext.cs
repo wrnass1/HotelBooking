@@ -14,6 +14,11 @@ public class HotelBookingDbContext : DbContext
     public DbSet<Room> Rooms { get; set; }
     public DbSet<Booking> Bookings { get; set; }
     public DbSet<User> Users { get; set; }
+    public DbSet<Facility> Facilities { get; set; }
+    public DbSet<Amenity> Amenities { get; set; }
+    public DbSet<HotelFacility> HotelFacilities { get; set; }
+    public DbSet<RoomAmenity> RoomAmenities { get; set; }
+    public DbSet<ApiKey> ApiKeys { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -72,6 +77,61 @@ public class HotelBookingDbContext : DbContext
             entity.Property(e => e.Role).IsRequired().HasMaxLength(50);
             entity.HasIndex(e => e.Username).IsUnique();
             entity.HasIndex(e => e.Email).IsUnique();
+        });
+
+        // Facility configuration
+        modelBuilder.Entity<Facility>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Name).IsRequired().HasMaxLength(100);
+            entity.Property(e => e.Icon).IsRequired().HasMaxLength(50);
+            entity.HasIndex(e => e.Name).IsUnique();
+        });
+
+        // Amenity configuration
+        modelBuilder.Entity<Amenity>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Name).IsRequired().HasMaxLength(100);
+            entity.Property(e => e.Icon).IsRequired().HasMaxLength(50);
+            entity.HasIndex(e => e.Name).IsUnique();
+        });
+
+        // HotelFacility many-to-many configuration
+        modelBuilder.Entity<HotelFacility>(entity =>
+        {
+            entity.HasKey(e => new { e.HotelId, e.FacilityId });
+            entity.HasOne(e => e.Hotel)
+                .WithMany(h => h.HotelFacilities)
+                .HasForeignKey(e => e.HotelId)
+                .OnDelete(DeleteBehavior.Cascade);
+            entity.HasOne(e => e.Facility)
+                .WithMany(f => f.HotelFacilities)
+                .HasForeignKey(e => e.FacilityId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // RoomAmenity many-to-many configuration
+        modelBuilder.Entity<RoomAmenity>(entity =>
+        {
+            entity.HasKey(e => new { e.RoomId, e.AmenityId });
+            entity.HasOne(e => e.Room)
+                .WithMany(r => r.RoomAmenities)
+                .HasForeignKey(e => e.RoomId)
+                .OnDelete(DeleteBehavior.Cascade);
+            entity.HasOne(e => e.Amenity)
+                .WithMany(a => a.RoomAmenities)
+                .HasForeignKey(e => e.AmenityId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // ApiKey configuration
+        modelBuilder.Entity<ApiKey>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Key).IsRequired().HasMaxLength(256);
+            entity.Property(e => e.Name).IsRequired().HasMaxLength(100);
+            entity.HasIndex(e => e.Key).IsUnique();
         });
     }
 }
