@@ -3,16 +3,22 @@ using HotelBooking.Data;
 using HotelBooking.Models.DTO;
 using HotelBooking.Models.Entities;
 using HotelBooking.Repositories.Interfaces;
+using HotelBooking.Sharding;
 
 namespace HotelBooking.Repositories;
 
 public class HotelRepository : IHotelRepository
 {
     private readonly HotelBookingDbContext _context;
+    private readonly HotelBookingReadDbContext _readContext;
+    private readonly BookingShardStore? _bookingShards;
 
-    public HotelRepository(HotelBookingDbContext context)
+    public HotelRepository(HotelBookingDbContext context, HotelBookingReadDbContext readContext,
+        BookingShardStore? bookingShards = null)
     {
         _context = context;
+        _readContext = readContext;
+        _bookingShards = bookingShards;
     }
 
     public async Task<IEnumerable<Hotel>> GetAllAsync()
@@ -24,7 +30,8 @@ public class HotelRepository : IHotelRepository
 
     public async Task<PagedResult<Hotel>> GetPagedAsync(HotelQueryDto query)
     {
-        var queryable = _context.Hotels.AsQueryable();
+        // The catalog tolerates replication lag. Writes and point reads use Primary.
+        var queryable = _readContext.Hotels.AsNoTracking();
 
         // Apply filters
         if (!string.IsNullOrEmpty(query.Search))
@@ -96,6 +103,12 @@ public class HotelRepository : IHotelRepository
         if (hotel == null)
             return false;
 
+        if (_bookingShards != null)
+        {
+            var roomIds = await _context.Rooms.Where(r => r.HotelId == id).Select(r => r.Id).ToArrayAsync();
+            if (await _bookingShards.AnyAsync("\"RoomId\"=ANY(@RoomIds)", new { RoomIds = roomIds }))
+                throw new InvalidOperationException("Cannot delete a hotel with bookings on shards.");
+        }
         _context.Hotels.Remove(hotel);
         await _context.SaveChangesAsync();
         return true;

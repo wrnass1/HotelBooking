@@ -1,0 +1,87 @@
+$ docker compose stop api
+ Container hotelbooking-api Stopping 
+ Container hotelbooking-api Stopped 
+
+$ docker compose run --rm --no-deps api --lab05 import
+LAB05_RESULT:{"utc":"2026-09-14T14:58:43.2347945Z","command":"import","result":{"sourceRows":0,"imported":0,"sourcePreserved":true}}
+ Container hotelbooking-api-run-759ef72b3e64 Creating 
+ Container hotelbooking-api-run-759ef72b3e64 Created 
+Cannot load library libgssapi_krb5.so.2 
+Error: libgssapi_krb5.so.2: cannot open shared object file: No such file or directory
+
+$ docker compose run --rm --no-deps api --lab05 seed
+LAB05_RESULT:{"utc":"2026-09-14T14:58:51.0012032Z","command":"seed","result":{"rows":100000,"hotelId":4,"roomCount":100,"firstId":1,"lastId":100000,"reused":false}}
+ Container hotelbooking-api-run-14a475245201 Creating 
+ Container hotelbooking-api-run-14a475245201 Created 
+Cannot load library libgssapi_krb5.so.2 
+Error: libgssapi_krb5.so.2: cannot open shared object file: No such file or directory
+
+$ docker compose up -d --no-deps api
+ Container hotelbooking-api Recreate 
+ Container hotelbooking-api Recreated 
+ Container hotelbooking-api Starting 
+ Container hotelbooking-api Started 
+
+$ docker exec hotelbooking-api dotnet HotelBooking.dll --lab05 compare
+LAB05_RESULT:{"utc":"2026-09-14T15:01:20.8173895Z","command":"compare","result":{"entity":"Bookings","shardKey":"Id","hash":"SHA-256(UTF-8 decimal Id), first 8 bytes, unsigned big-endian","activeLayout":"sha256-u64be-v1|Modulo|1|shard-0,shard-1,shard-2","total":100000,"actualCounts":{"shard-0":33219,"shard-1":33353,"shard-2":33428},"samples":{"shard-0":[6,8,9],"shard-1":[1,2,3],"shard-2":[5,7,13]},"experiments":[{"strategy":"Modulo","virtualNodes":1,"total":100000,"moved":74969,"unchanged":25031,"movedPercent":74.969,"oldToOld":49822,"distributionBefore":{"shard-0":33219,"shard-1":33353,"shard-2":33428},"distributionAfter":{"shard-0":25014,"shard-1":24868,"shard-2":24971,"shard-3":25147},"addedFifthMoved":79651,"removedShard1Moved":74835,"ringBefore":null,"ringAfter":null},{"strategy":"ConsistentHash","virtualNodes":1,"total":100000,"moved":47324,"unchanged":52676,"movedPercent":47.324,"oldToOld":0,"distributionBefore":{"shard-0":69500,"shard-1":18273,"shard-2":12227},"distributionAfter":{"shard-0":22176,"shard-1":18273,"shard-2":12227,"shard-3":47324},"addedFifthMoved":4074,"removedShard1Moved":18273,"ringBefore":[{"position":"28585A5647107643","shard":"shard-1"},{"position":"47AFA04D222D2283","shard":"shard-2"},{"position":"F979E40276AF1D28","shard":"shard-0"}],"ringAfter":[{"position":"28585A5647107643","shard":"shard-1"},{"position":"47AFA04D222D2283","shard":"shard-2"},{"position":"C0FCA27CDF31036E","shard":"shard-3"},{"position":"F979E40276AF1D28","shard":"shard-0"}]},{"strategy":"ConsistentHash","virtualNodes":128,"total":100000,"moved":23669,"unchanged":76331,"movedPercent":23.669,"oldToOld":0,"distributionBefore":{"shard-0":34824,"shard-1":29901,"shard-2":35275},"distributionAfter":{"shard-0":25565,"shard-1":24623,"shard-2":26143,"shard-3":23669},"addedFifthMoved":18613,"removedShard1Moved":24623,"ringBefore":null,"ringAfter":null}],"note":"3-\u003E4 is a routing simulation over actual stored IDs, not a physical data migration."}}
+Cannot load library libgssapi_krb5.so.2 
+Error: libgssapi_krb5.so.2: cannot open shared object file: No such file or directory
+
+$ docker exec hotelbooking-api dotnet HotelBooking.dll --lab05 verify
+Cannot load library libgssapi_krb5.so.2 
+Error: libgssapi_krb5.so.2: cannot open shared object file: No such file or directory
+Unhandled exception. System.Data.DataException: Error parsing column 5 (CheckInDate=01/01/2030 - Object)
+ ---> System.InvalidCastException: Object must implement IConvertible.
+   at System.Convert.ChangeType(Object value, Type conversionType, IFormatProvider provider)
+   at Deserialize497b5a48-9b8f-43ca-aa18-6c386774820e(DbDataReader)
+   --- End of inner exception stack trace ---
+   at Dapper.SqlMapper.ThrowDataException(Exception ex, Int32 index, IDataReader reader, Object value) in /_/Dapper/SqlMapper.cs:line 3928
+   at Deserialize497b5a48-9b8f-43ca-aa18-6c386774820e(DbDataReader)
+   at Dapper.SqlMapper.QueryAsync[T](IDbConnection cnn, Type effectiveType, CommandDefinition command) in /_/Dapper/SqlMapper.Async.cs:line 454
+   at HotelBooking.Sharding.BookingShardStore.<>c__DisplayClass9_0.<<ReadAsync>b__2>d.MoveNext() in /src/HotelBooking/Sharding/BookingShardStore.cs:line 47
+--- End of stack trace from previous location ---
+   at HotelBooking.Sharding.BookingShardStore.<>c__DisplayClass9_0.<<ReadAsync>b__2>d.MoveNext() in /src/HotelBooking/Sharding/BookingShardStore.cs:line 47
+--- End of stack trace from previous location ---
+   at HotelBooking.Sharding.BookingShardStore.ReadAsync(String where, Object parameters, Nullable`1 id) in /src/HotelBooking/Sharding/BookingShardStore.cs:line 44
+   at HotelBooking.Sharding.ShardingLab.VerifyAsync(IServiceProvider services, BookingShardStore store) in /src/HotelBooking/Sharding/ShardingLab.cs:line 147
+   at HotelBooking.Sharding.ShardingLab.RunAsync(IServiceProvider services, String[] args) in /src/HotelBooking/Sharding/ShardingLab.cs:line 27
+   at Program.<Main>$(String[] args) in /src/HotelBooking/Program.cs:line 207
+   at Program.<Main>(String[] args)
+
+$ docker exec hotelbooking-api dotnet HotelBooking.dll --lab05 compare
+LAB05_RESULT:{"utc":"2026-09-14T15:02:53.7123483Z","command":"compare","result":{"entity":"Bookings","shardKey":"Id","hash":"SHA-256(UTF-8 decimal Id), first 8 bytes, unsigned big-endian","activeLayout":"sha256-u64be-v1|Modulo|1|shard-0,shard-1,shard-2","total":100000,"actualCounts":{"shard-0":33219,"shard-1":33353,"shard-2":33428},"samples":{"shard-0":[6,8,9],"shard-1":[1,2,3],"shard-2":[5,7,13]},"experiments":[{"strategy":"Modulo","virtualNodes":1,"total":100000,"moved":74969,"unchanged":25031,"movedPercent":74.969,"oldToOld":49822,"distributionBefore":{"shard-0":33219,"shard-1":33353,"shard-2":33428},"distributionAfter":{"shard-0":25014,"shard-1":24868,"shard-2":24971,"shard-3":25147},"addedFifthMoved":79651,"removedShard1Moved":74835,"ringBefore":null,"ringAfter":null},{"strategy":"ConsistentHash","virtualNodes":1,"total":100000,"moved":47324,"unchanged":52676,"movedPercent":47.324,"oldToOld":0,"distributionBefore":{"shard-0":69500,"shard-1":18273,"shard-2":12227},"distributionAfter":{"shard-0":22176,"shard-1":18273,"shard-2":12227,"shard-3":47324},"addedFifthMoved":4074,"removedShard1Moved":18273,"ringBefore":[{"position":"28585A5647107643","shard":"shard-1"},{"position":"47AFA04D222D2283","shard":"shard-2"},{"position":"F979E40276AF1D28","shard":"shard-0"}],"ringAfter":[{"position":"28585A5647107643","shard":"shard-1"},{"position":"47AFA04D222D2283","shard":"shard-2"},{"position":"C0FCA27CDF31036E","shard":"shard-3"},{"position":"F979E40276AF1D28","shard":"shard-0"}]},{"strategy":"ConsistentHash","virtualNodes":128,"total":100000,"moved":23669,"unchanged":76331,"movedPercent":23.669,"oldToOld":0,"distributionBefore":{"shard-0":34824,"shard-1":29901,"shard-2":35275},"distributionAfter":{"shard-0":25565,"shard-1":24623,"shard-2":26143,"shard-3":23669},"addedFifthMoved":18613,"removedShard1Moved":24623,"ringBefore":null,"ringAfter":null}],"note":"3-\u003E4 is a routing simulation over actual stored IDs, not a physical data migration."}}
+Cannot load library libgssapi_krb5.so.2 
+Error: libgssapi_krb5.so.2: cannot open shared object file: No such file or directory
+
+$ docker exec hotelbooking-api dotnet HotelBooking.dll --lab05 verify
+LAB05_RESULT:{"utc":"2026-09-14T15:02:56.0029328Z","command":"verify","result":{"passed":true,"routedId":1,"shard":"shard-1","stats":{"totalBookings":100000,"totalRevenue":20000000.00,"averageBookingValue":200.00,"confirmedBookings":90000,"cancelledBookings":10000,"bookingsByStatus":{"Cancelled":10000,"Confirmed":90000},"revenueByMonth":{"2030-01":288000.00,"2030-02":252000.00,"2030-03":270000.00,"2030-04":270000.00,"2030-05":288000.00,"2030-06":270000.00,"2030-07":270000.00,"2030-08":288000.00,"2030-09":270000.00,"2030-10":270000.00,"2030-11":270000.00,"2030-12":288000.00,"2031-01":270000.00,"2031-02":252000.00,"2031-03":288000.00,"2031-04":270000.00,"2031-05":270000.00,"2031-06":270000.00,"2031-07":288000.00,"2031-08":270000.00,"2031-09":270000.00,"2031-10":288000.00,"2031-11":270000.00,"2031-12":270000.00,"2032-01":288000.00,"2032-02":252000.00,"2032-03":288000.00,"2032-04":270000.00,"2032-05":270000.00,"2032-06":270000.00,"2032-07":288000.00,"2032-08":270000.00,"2032-09":270000.00,"2032-10":288000.00,"2032-11":270000.00,"2032-12":270000.00,"2033-01":288000.00,"2033-02":252000.00,"2033-03":270000.00,"2033-04":270000.00,"2033-05":288000.00,"2033-06":270000.00,"2033-07":270000.00,"2033-08":288000.00,"2033-09":270000.00,"2033-10":270000.00,"2033-11":270000.00,"2033-12":288000.00,"2034-01":270000.00,"2034-02":252000.00,"2034-03":288000.00,"2034-04":270000.00,"2034-05":270000.00,"2034-06":270000.00,"2034-07":288000.00,"2034-08":270000.00,"2034-09":270000.00,"2034-10":288000.00,"2034-11":270000.00,"2034-12":270000.00,"2035-01":288000.00,"2035-02":252000.00,"2035-03":270000.00,"2035-04":270000.00,"2035-05":288000.00,"2035-06":198000.00}},"availability":true,"excludeBooking":true,"roomSearch":true,"roomProtected":true,"hotelProtected":true}}
+Cannot load library libgssapi_krb5.so.2 
+Error: libgssapi_krb5.so.2: cannot open shared object file: No such file or directory
+
+$ docker exec hotelbooking-shard-0 psql -XAt -v ON_ERROR_STOP=1 -U hotelbooking_shard_user -d hotelbooking_shard -c SELECT json_build_object(
+        'database', current_database(), 'version', version(),
+        'systemIdentifier', (SELECT system_identifier::text FROM pg_control_system()),
+        'inRecovery', pg_is_in_recovery(), 'readOnly', current_setting('transaction_read_only'),
+        'layout', (SELECT fingerprint FROM public.sharding_layout),
+        'datasetRows', (SELECT count(*) FROM public."Bookings" WHERE "GuestEmail" LIKE 'lab05.booking.%@example.test'),
+        'totalRows', (SELECT count(*) FROM public."Bookings"))
+{"database" : "hotelbooking_shard", "version" : "PostgreSQL 16.15 on x86_64-pc-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit", "systemIdentifier" : "7685404009289150498", "inRecovery" : false, "readOnly" : "off", "layout" : "sha256-u64be-v1|Modulo|1|shard-0,shard-1,shard-2", "datasetRows" : 33219, "totalRows" : 33219}
+
+$ docker exec hotelbooking-shard-1 psql -XAt -v ON_ERROR_STOP=1 -U hotelbooking_shard_user -d hotelbooking_shard -c SELECT json_build_object(
+        'database', current_database(), 'version', version(),
+        'systemIdentifier', (SELECT system_identifier::text FROM pg_control_system()),
+        'inRecovery', pg_is_in_recovery(), 'readOnly', current_setting('transaction_read_only'),
+        'layout', (SELECT fingerprint FROM public.sharding_layout),
+        'datasetRows', (SELECT count(*) FROM public."Bookings" WHERE "GuestEmail" LIKE 'lab05.booking.%@example.test'),
+        'totalRows', (SELECT count(*) FROM public."Bookings"))
+{"database" : "hotelbooking_shard", "version" : "PostgreSQL 16.15 on x86_64-pc-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit", "systemIdentifier" : "7685404008627011618", "inRecovery" : false, "readOnly" : "off", "layout" : "sha256-u64be-v1|Modulo|1|shard-0,shard-1,shard-2", "datasetRows" : 33353, "totalRows" : 33353}
+
+$ docker exec hotelbooking-shard-2 psql -XAt -v ON_ERROR_STOP=1 -U hotelbooking_shard_user -d hotelbooking_shard -c SELECT json_build_object(
+        'database', current_database(), 'version', version(),
+        'systemIdentifier', (SELECT system_identifier::text FROM pg_control_system()),
+        'inRecovery', pg_is_in_recovery(), 'readOnly', current_setting('transaction_read_only'),
+        'layout', (SELECT fingerprint FROM public.sharding_layout),
+        'datasetRows', (SELECT count(*) FROM public."Bookings" WHERE "GuestEmail" LIKE 'lab05.booking.%@example.test'),
+        'totalRows', (SELECT count(*) FROM public."Bookings"))
+{"database" : "hotelbooking_shard", "version" : "PostgreSQL 16.15 on x86_64-pc-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit", "systemIdentifier" : "7685404008381734946", "inRecovery" : false, "readOnly" : "off", "layout" : "sha256-u64be-v1|Modulo|1|shard-0,shard-1,shard-2", "datasetRows" : 33428, "totalRows" : 33428}
+

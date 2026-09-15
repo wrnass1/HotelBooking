@@ -1,0 +1,59 @@
+{
+  "capturedUnixTime": 1789399701.987648,
+  "passed": true,
+  "nodes": [
+    {
+      "database": "hotelbooking_shard",
+      "version": "PostgreSQL 16.15 on x86_64-pc-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit",
+      "systemIdentifier": "7685404009289150498",
+      "inRecovery": false,
+      "readOnly": "off",
+      "layout": "sha256-u64be-v1|Modulo|1|shard-0,shard-1,shard-2",
+      "datasetRows": 33219,
+      "totalRows": 33219,
+      "shard": 0
+    },
+    {
+      "database": "hotelbooking_shard",
+      "version": "PostgreSQL 16.15 on x86_64-pc-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit",
+      "systemIdentifier": "7685404008627011618",
+      "inRecovery": false,
+      "readOnly": "off",
+      "layout": "sha256-u64be-v1|Modulo|1|shard-0,shard-1,shard-2",
+      "datasetRows": 33353,
+      "totalRows": 33353,
+      "shard": 1
+    },
+    {
+      "database": "hotelbooking_shard",
+      "version": "PostgreSQL 16.15 on x86_64-pc-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit",
+      "systemIdentifier": "7685404008381734946",
+      "inRecovery": false,
+      "readOnly": "off",
+      "layout": "sha256-u64be-v1|Modulo|1|shard-0,shard-1,shard-2",
+      "datasetRows": 33428,
+      "totalRows": 33428,
+      "shard": 2
+    }
+  ],
+  "apiHealth": {
+    "status": "Healthy",
+    "checks": [
+      {
+        "name": "postgresql",
+        "status": "Healthy",
+        "description": null
+      },
+      {
+        "name": "postgresql-replica",
+        "status": "Healthy",
+        "description": null
+      },
+      {
+        "name": "redis",
+        "status": "Healthy",
+        "description": null
+      }
+    ]
+  }
+}

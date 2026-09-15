@@ -1,0 +1,524 @@
+SET
+SET
+SET
+SET
+                                         version                                          | shared_buffers | parallel_workers 
+------------------------------------------------------------------------------------------+----------------+------------------
+ PostgreSQL 16.15 on x86_64-pc-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit | 128MB          | 2
+(1 row)
+
+       section       
+---------------------
+ PART 1: RANGE dates
+(1 row)
+
+TRUNCATE TABLE
+DROP INDEX
+psql:<stdin>:15: NOTICE:  index "idx_events_user_id" does not exist, skipping
+DROP INDEX
+psql:<stdin>:16: NOTICE:  index "idx_events_event_type" does not exist, skipping
+INSERT 0 300000
+ANALYZE
+  partition_name   | count  
+-------------------+--------
+ events_2026_09_09 | 100000
+ events_2026_09_10 | 100000
+ events_2026_09_11 | 100000
+(3 rows)
+
+BEGIN
+ id |     created_at      |     tableoid      
+----+---------------------+-------------------
+ -1 | 2026-09-10 12:00:00 | events_2026_09_10
+ -2 | 2026-09-11 00:00:00 | events_2026_09_11
+(2 rows)
+
+INSERT 0 2
+DO
+psql:<stdin>:42: NOTICE:  Expected SQLSTATE 23514: no partition of relation "events" found for row
+ROLLBACK
+                 section                 
+-----------------------------------------
+ PART 2: date filter / event_type filter
+(1 row)
+
+                                                                         QUERY PLAN                                                                         
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=3790.95..3790.96 rows=1 width=8) (actual time=30.040..30.042 rows=1 loops=1)
+   Buffers: shared hit=2041
+   ->  Seq Scan on events_2026_09_10 events  (cost=0.00..3541.00 rows=99980 width=0) (actual time=0.012..22.435 rows=100000 loops=1)
+         Filter: ((created_at >= '2026-09-10 00:00:00'::timestamp without time zone) AND (created_at < '2026-09-11 00:00:00'::timestamp without time zone))
+         Buffers: shared hit=2041
+ Planning:
+   Buffers: shared hit=22
+ Planning Time: 0.779 ms
+ Execution Time: 30.076 ms
+(9 rows)
+
+                                                                           QUERY PLAN                                                                           
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Finalize Aggregate  (cost=9421.79..9421.80 rows=1 width=8) (actual time=26.774..32.912 rows=1 loops=1)
+   Buffers: shared hit=6123
+   ->  Gather  (cost=9421.57..9421.78 rows=2 width=8) (actual time=26.508..32.897 rows=3 loops=1)
+         Workers Planned: 2
+         Workers Launched: 2
+         Buffers: shared hit=6123
+         ->  Partial Aggregate  (cost=8421.57..8421.58 rows=1 width=8) (actual time=20.326..20.329 rows=1 loops=3)
+               Buffers: shared hit=6123
+               ->  Parallel Append  (cost=0.00..8390.68 rows=12359 width=0) (actual time=0.022..19.270 rows=10000 loops=3)
+                     Buffers: shared hit=6123
+                     ->  Parallel Seq Scan on events_2026_09_09 events_1  (cost=0.00..2776.29 rows=5776 width=0) (actual time=0.018..6.768 rows=3333 loops=3)
+                           Filter: ((event_type)::text = 'click'::text)
+                           Rows Removed by Filter: 30000
+                           Buffers: shared hit=2041
+                     ->  Parallel Seq Scan on events_2026_09_10 events_2  (cost=0.00..2776.29 rows=5778 width=0) (actual time=0.017..7.519 rows=5000 loops=2)
+                           Filter: ((event_type)::text = 'click'::text)
+                           Rows Removed by Filter: 45000
+                           Buffers: shared hit=2041
+                     ->  Parallel Seq Scan on events_2026_09_11 events_3  (cost=0.00..2776.29 rows=5894 width=0) (actual time=0.014..18.203 rows=10000 loops=1)
+                           Filter: ((event_type)::text = 'click'::text)
+                           Rows Removed by Filter: 90000
+                           Buffers: shared hit=2041
+ Planning:
+   Buffers: shared hit=17
+ Planning Time: 0.447 ms
+ Execution Time: 33.066 ms
+(26 rows)
+
+        section        
+-----------------------
+ PART 3: numeric RANGE
+(1 row)
+
+TRUNCATE TABLE
+INSERT 0 7
+ANALYZE
+ id |     name      | price  |   partition_name   
+----+---------------+--------+--------------------
+  1 | Free          |      0 | products_cheap
+  2 | Cheap         |  99.99 | products_cheap
+  3 | Boundary 100  |    100 | products_medium
+  4 | Medium        | 499.99 | products_medium
+  5 | Medium upper  | 999.99 | products_medium
+  6 | Boundary 1000 |   1000 | products_expensive
+  7 | Expensive     |   5000 | products_expensive
+(7 rows)
+
+                                                    QUERY PLAN                                                     
+-------------------------------------------------------------------------------------------------------------------
+ Seq Scan on products_medium products  (cost=0.00..1.04 rows=1 width=25) (actual time=0.010..0.012 rows=2 loops=1)
+   Filter: ((price >= '100'::numeric) AND (price < '500'::numeric))
+   Rows Removed by Filter: 1
+   Buffers: shared hit=1
+ Planning:
+   Buffers: shared hit=19
+ Planning Time: 0.538 ms
+ Execution Time: 0.027 ms
+(8 rows)
+
+          section           
+----------------------------
+ PART 4-5: LIST and DEFAULT
+(1 row)
+
+TRUNCATE TABLE
+psql:<stdin>:68: NOTICE:  table "customers_default" does not exist, skipping
+DROP TABLE
+INSERT 0 3
+ANALYZE
+                                                    QUERY PLAN                                                    
+------------------------------------------------------------------------------------------------------------------
+ Seq Scan on customers_b2b customers  (cost=0.00..1.01 rows=1 width=23) (actual time=0.029..0.030 rows=1 loops=1)
+   Filter: ((customer_type)::text = 'B2B'::text)
+   Buffers: shared hit=1
+ Planning:
+   Buffers: shared hit=30
+ Planning Time: 0.686 ms
+ Execution Time: 0.142 ms
+(7 rows)
+
+psql:<stdin>:81: NOTICE:  Expected SQLSTATE 23514: no partition of relation "customers" found for row
+DO
+CREATE TABLE
+ id  |   name    | customer_type |     tableoid      
+-----+-----------+---------------+-------------------
+ 100 | Test User | VIP           | customers_default
+(1 row)
+
+INSERT 0 1
+          section          
+---------------------------
+ PART 6: HASH distribution
+(1 row)
+
+TRUNCATE TABLE
+INSERT 0 100000
+ANALYZE
+ partition_name | count | percent 
+----------------+-------+---------
+ user_events_0  | 25126 |   25.13
+ user_events_1  | 24978 |   24.98
+ user_events_2  | 24971 |   24.97
+ user_events_3  | 24925 |   24.93
+(4 rows)
+
+                                                      QUERY PLAN                                                      
+----------------------------------------------------------------------------------------------------------------------
+ Seq Scan on user_events_0 user_events  (cost=0.00..499.08 rows=1 width=30) (actual time=0.388..2.080 rows=1 loops=1)
+   Filter: (user_id = 12345)
+   Rows Removed by Filter: 25125
+   Buffers: shared hit=185
+ Planning:
+   Buffers: shared hit=20
+ Planning Time: 0.596 ms
+ Execution Time: 2.096 ms
+(8 rows)
+
+           section            
+------------------------------
+ PART 8: before user_id index
+(1 row)
+
+                                                                                 QUERY PLAN                                                                                 
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Seq Scan on events_2026_09_10 events  (cost=0.00..3791.00 rows=1 width=130) (actual time=2.287..14.076 rows=1 loops=1)
+   Filter: ((created_at >= '2026-09-10 00:00:00'::timestamp without time zone) AND (created_at < '2026-09-11 00:00:00'::timestamp without time zone) AND (user_id = 12345))
+   Rows Removed by Filter: 99999
+   Buffers: shared hit=2041
+ Planning:
+   Buffers: shared hit=9
+ Planning Time: 0.654 ms
+ Execution Time: 14.094 ms
+(8 rows)
+
+CREATE INDEX
+ANALYZE
+           section           
+-----------------------------
+ PART 8: after user_id index
+(1 row)
+
+                                                                        QUERY PLAN                                                                        
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+ Index Scan using events_2026_09_10_user_id_idx on events_2026_09_10 events  (cost=0.29..8.32 rows=1 width=130) (actual time=0.111..0.112 rows=1 loops=1)
+   Index Cond: (user_id = 12345)
+   Filter: ((created_at >= '2026-09-10 00:00:00'::timestamp without time zone) AND (created_at < '2026-09-11 00:00:00'::timestamp without time zone))
+   Buffers: shared hit=4 read=2
+ Planning:
+   Buffers: shared hit=42 read=1
+ Planning Time: 1.268 ms
+ Execution Time: 0.144 ms
+(8 rows)
+
+          index_name           |       parent       | isleaf 
+-------------------------------+--------------------+--------
+ idx_events_user_id            |                    | f
+ events_2026_09_09_user_id_idx | idx_events_user_id | t
+ events_2026_09_10_user_id_idx | idx_events_user_id | t
+ events_2026_09_11_user_id_idx | idx_events_user_id | t
+(4 rows)
+
+             section             
+---------------------------------
+ PART 9: before event_type index
+(1 row)
+
+                                                                           QUERY PLAN                                                                           
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Finalize Aggregate  (cost=9421.22..9421.23 rows=1 width=8) (actual time=21.042..24.183 rows=1 loops=1)
+   Buffers: shared hit=6123
+   ->  Gather  (cost=9421.00..9421.21 rows=2 width=8) (actual time=20.845..24.173 rows=3 loops=1)
+         Workers Planned: 2
+         Workers Launched: 2
+         Buffers: shared hit=6123
+         ->  Partial Aggregate  (cost=8421.00..8421.01 rows=1 width=8) (actual time=15.400..15.402 rows=1 loops=3)
+               Buffers: shared hit=6123
+               ->  Parallel Append  (cost=0.00..8390.30 rows=12283 width=0) (actual time=0.024..14.556 rows=10000 loops=3)
+                     Buffers: shared hit=6123
+                     ->  Parallel Seq Scan on events_2026_09_09 events_1  (cost=0.00..2776.29 rows=5745 width=0) (actual time=0.013..4.497 rows=3333 loops=3)
+                           Filter: ((event_type)::text = 'click'::text)
+                           Rows Removed by Filter: 30000
+                           Buffers: shared hit=2041
+                     ->  Parallel Seq Scan on events_2026_09_10 events_2  (cost=0.00..2776.29 rows=5888 width=0) (actual time=0.023..7.359 rows=5000 loops=2)
+                           Filter: ((event_type)::text = 'click'::text)
+                           Rows Removed by Filter: 45000
+                           Buffers: shared hit=2041
+                     ->  Parallel Seq Scan on events_2026_09_11 events_3  (cost=0.00..2776.29 rows=5708 width=0) (actual time=0.012..11.950 rows=10000 loops=1)
+                           Filter: ((event_type)::text = 'click'::text)
+                           Rows Removed by Filter: 90000
+                           Buffers: shared hit=2041
+ Planning:
+   Buffers: shared hit=10 read=2
+ Planning Time: 0.496 ms
+ Execution Time: 24.257 ms
+(26 rows)
+
+CREATE INDEX
+VACUUM
+                  section                  
+-------------------------------------------
+ PART 9: after event_type index and vacuum
+(1 row)
+
+                                                                                       QUERY PLAN                                                                                       
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=869.20..869.21 rows=1 width=8) (actual time=5.557..5.558 rows=1 loops=1)
+   Buffers: shared hit=5 read=30
+   ->  Append  (cost=0.29..793.97 rows=30093 width=0) (actual time=0.045..4.177 rows=30000 loops=1)
+         Buffers: shared hit=5 read=30
+         ->  Index Only Scan using events_2026_09_09_event_type_idx on events_2026_09_09 events_1  (cost=0.29..217.29 rows=10343 width=0) (actual time=0.045..0.678 rows=10000 loops=1)
+               Index Cond: (event_type = 'click'::text)
+               Heap Fetches: 0
+               Buffers: shared hit=1 read=10
+         ->  Index Only Scan using events_2026_09_10_event_type_idx on events_2026_09_10 events_2  (cost=0.29..214.99 rows=9983 width=0) (actual time=0.043..0.728 rows=10000 loops=1)
+               Index Cond: (event_type = 'click'::text)
+               Heap Fetches: 4
+               Buffers: shared hit=2 read=10
+         ->  Index Only Scan using events_2026_09_11_event_type_idx on events_2026_09_11 events_3  (cost=0.29..211.22 rows=9767 width=0) (actual time=0.031..0.661 rows=10000 loops=1)
+               Index Cond: (event_type = 'click'::text)
+               Heap Fetches: 4
+               Buffers: shared hit=2 read=10
+ Planning:
+   Buffers: shared hit=33
+ Planning Time: 0.359 ms
+ Execution Time: 5.613 ms
+(20 rows)
+
+               section                
+--------------------------------------
+ PART 10: CreatePartitionsJob, repeat
+(1 row)
+
+psql:<stdin>:129: NOTICE:  CreatePartitionsJob started: events, today=2026-09-11, horizon=3
+psql:<stdin>:129: NOTICE:  Partition created: events_2026_09_12
+psql:<stdin>:129: NOTICE:  Partition created: events_2026_09_13
+psql:<stdin>:129: NOTICE:  Partition created: events_2026_09_14
+psql:<stdin>:129: NOTICE:  CreatePartitionsJob finished: existing=1, required=4, created=3
+                                                     create_partitions_job                                                      
+--------------------------------------------------------------------------------------------------------------------------------
+ {"target": "events", "created": ["events_2026_09_12", "events_2026_09_13", "events_2026_09_14"], "existing": 1, "required": 4}
+(1 row)
+
+psql:<stdin>:130: NOTICE:  CreatePartitionsJob started: events, today=2026-09-11, horizon=3
+                       create_partitions_job                       
+-------------------------------------------------------------------
+ {"target": "events", "created": [], "existing": 4, "required": 4}
+(1 row)
+
+psql:<stdin>:130: NOTICE:  CreatePartitionsJob finished: existing=4, required=4, created=0
+  partition_name   | range_start | range_end  | is_valid 
+-------------------+-------------+------------+----------
+ events_2026_09_11 | 2026-09-11  | 2026-09-12 | t
+ events_2026_09_12 | 2026-09-12  | 2026-09-13 | t
+ events_2026_09_13 | 2026-09-13  | 2026-09-14 | t
+ events_2026_09_14 | 2026-09-14  | 2026-09-15 | t
+(4 rows)
+
+            section            
+-------------------------------
+ PART 11: PartitionHealthCheck
+(1 row)
+
+                                                                                                              partition_health_check                                                                                                              
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ {"table": "lab03.events", "status": "OK", "message": "Partition check OK (recovery)", "checked_at": "2026-09-12T08:30:43.552755+00:00", "horizon_unit": "days", "reference_date": "2026-09-11", "expected_horizon": 3, "missing_partitions": []}
+(1 row)
+
+            section            
+-------------------------------
+ PART 12: HotelBooking dataset
+(1 row)
+
+TRUNCATE TABLE
+INSERT 0 1000
+INSERT 0 300000
+INSERT 0 300000
+ANALYZE
+ANALYZE
+ANALYZE
+  partition_name  | count  
+------------------+--------
+ bookings_2026_09 |  98901
+ bookings_2026_10 | 102198
+ bookings_2026_11 |  98901
+(3 rows)
+
+              section              
+-----------------------------------
+ PART 12 Q1 baseline: GetByIdAsync
+(1 row)
+
+                                                                 QUERY PLAN                                                                 
+--------------------------------------------------------------------------------------------------------------------------------------------
+ Index Scan using bookings_baseline_pkey on bookings_baseline  (cost=0.42..8.44 rows=1 width=205) (actual time=0.019..0.020 rows=1 loops=1)
+   Index Cond: ("Id" = 12345)
+   Buffers: shared hit=4
+ Planning:
+   Buffers: shared hit=75 read=1
+ Planning Time: 0.789 ms
+ Execution Time: 0.037 ms
+(7 rows)
+
+               section                
+--------------------------------------
+ PART 12 Q1 partitioned: GetByIdAsync
+(1 row)
+
+                                                                         QUERY PLAN                                                                          
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Append  (cost=0.29..24.95 rows=3 width=205) (actual time=0.019..0.027 rows=1 loops=1)
+   Buffers: shared hit=7
+   ->  Index Scan using bookings_2026_09_pkey on bookings_2026_09 "Bookings_1"  (cost=0.29..8.31 rows=1 width=205) (actual time=0.010..0.010 rows=0 loops=1)
+         Index Cond: ("Id" = 12345)
+         Buffers: shared hit=2
+   ->  Index Scan using bookings_2026_10_pkey on bookings_2026_10 "Bookings_2"  (cost=0.29..8.31 rows=1 width=205) (actual time=0.008..0.008 rows=1 loops=1)
+         Index Cond: ("Id" = 12345)
+         Buffers: shared hit=3
+   ->  Index Scan using bookings_2026_11_pkey on bookings_2026_11 "Bookings_3"  (cost=0.29..8.31 rows=1 width=205) (actual time=0.007..0.007 rows=0 loops=1)
+         Index Cond: ("Id" = 12345)
+         Buffers: shared hit=2
+ Planning:
+   Buffers: shared hit=108
+ Planning Time: 0.889 ms
+ Execution Time: 0.075 ms
+(15 rows)
+
+                section                
+---------------------------------------
+ PART 12 Q2 baseline: GetByRoomIdAsync
+(1 row)
+
+                                                                QUERY PLAN                                                                 
+-------------------------------------------------------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on bookings_baseline  (cost=6.61..949.37 rows=298 width=205) (actual time=0.114..0.611 rows=300 loops=1)
+   Recheck Cond: ("RoomId" = 1)
+   Heap Blocks: exact=300
+   Buffers: shared hit=302
+   ->  Bitmap Index Scan on "bookings_baseline_RoomId_idx"  (cost=0.00..6.53 rows=298 width=0) (actual time=0.074..0.074 rows=300 loops=1)
+         Index Cond: ("RoomId" = 1)
+         Buffers: shared hit=2
+ Planning Time: 0.050 ms
+ Execution Time: 0.671 ms
+(9 rows)
+
+                 section                  
+------------------------------------------
+ PART 12 Q2 partitioned: GetByRoomIdAsync
+(1 row)
+
+                                                                   QUERY PLAN                                                                   
+------------------------------------------------------------------------------------------------------------------------------------------------
+ Append  (cost=5.06..962.36 rows=299 width=205) (actual time=0.033..0.496 rows=300 loops=1)
+   Buffers: shared hit=306
+   ->  Bitmap Heap Scan on bookings_2026_09 "Bookings_1"  (cost=5.06..317.97 rows=99 width=205) (actual time=0.033..0.147 rows=99 loops=1)
+         Recheck Cond: ("RoomId" = 1)
+         Heap Blocks: exact=99
+         Buffers: shared hit=101
+         ->  Bitmap Index Scan on "bookings_2026_09_RoomId_idx"  (cost=0.00..5.04 rows=99 width=0) (actual time=0.018..0.018 rows=99 loops=1)
+               Index Cond: ("RoomId" = 1)
+               Buffers: shared hit=2
+   ->  Bitmap Heap Scan on bookings_2026_10 "Bookings_2"  (cost=5.08..327.83 rows=102 width=205) (actual time=0.036..0.183 rows=102 loops=1)
+         Recheck Cond: ("RoomId" = 1)
+         Heap Blocks: exact=102
+         Buffers: shared hit=104
+         ->  Bitmap Index Scan on "bookings_2026_10_RoomId_idx"  (cost=0.00..5.06 rows=102 width=0) (actual time=0.020..0.021 rows=102 loops=1)
+               Index Cond: ("RoomId" = 1)
+               Buffers: shared hit=2
+   ->  Bitmap Heap Scan on bookings_2026_11 "Bookings_3"  (cost=5.05..315.07 rows=98 width=205) (actual time=0.025..0.142 rows=99 loops=1)
+         Recheck Cond: ("RoomId" = 1)
+         Heap Blocks: exact=99
+         Buffers: shared hit=101
+         ->  Bitmap Index Scan on "bookings_2026_11_RoomId_idx"  (cost=0.00..5.03 rows=98 width=0) (actual time=0.016..0.016 rows=99 loops=1)
+               Index Cond: ("RoomId" = 1)
+               Buffers: shared hit=2
+ Planning Time: 0.143 ms
+ Execution Time: 0.621 ms
+(25 rows)
+
+                    section                     
+------------------------------------------------
+ PART 12 Q3 baseline: GetBookingStatisticsAsync
+(1 row)
+
+                                                                        QUERY PLAN                                                                         
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+ Finalize Aggregate  (cost=7689.41..7689.42 rows=1 width=88) (actual time=19.408..22.862 rows=1 loops=1)
+   Buffers: shared hit=4807 read=3
+   ->  Gather  (cost=7689.17..7689.38 rows=2 width=88) (actual time=19.212..22.842 rows=3 loops=1)
+         Workers Planned: 2
+         Workers Launched: 2
+         Buffers: shared hit=4807 read=3
+         ->  Partial Aggregate  (cost=6689.17..6689.18 rows=1 width=88) (actual time=15.702..15.704 rows=1 loops=3)
+               Buffers: shared hit=4807 read=3
+               ->  Hash Join  (cost=24.75..6625.92 rows=4217 width=17) (actual time=0.527..14.995 rows=3406 loops=3)
+                     Hash Cond: (b."RoomId" = r."Id")
+                     Buffers: shared hit=4807 read=3
+                     ->  Parallel Seq Scan on bookings_baseline b  (cost=0.00..6490.00 rows=42171 width=21) (actual time=0.011..11.412 rows=34066 loops=3)
+                           Filter: (("CheckInDate" >= '2026-10-01'::date) AND ("CheckInDate" <= '2026-10-31'::date))
+                           Rows Removed by Filter: 65934
+                           Buffers: shared hit=4615
+                     ->  Hash  (cost=23.50..23.50 rows=100 width=4) (actual time=0.103..0.104 rows=100 loops=3)
+                           Buckets: 1024  Batches: 1  Memory Usage: 12kB
+                           Buffers: shared hit=33
+                           ->  Seq Scan on "Rooms" r  (cost=0.00..23.50 rows=100 width=4) (actual time=0.010..0.084 rows=100 loops=3)
+                                 Filter: ("HotelId" = 1)
+                                 Rows Removed by Filter: 900
+                                 Buffers: shared hit=33
+ Planning:
+   Buffers: shared hit=61 read=8
+ Planning Time: 0.838 ms
+ Execution Time: 22.979 ms
+(26 rows)
+
+                      section                      
+---------------------------------------------------
+ PART 12 Q3 partitioned: GetBookingStatisticsAsync
+(1 row)
+
+                                                              QUERY PLAN                                                               
+---------------------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=3552.43..3552.44 rows=1 width=88) (actual time=22.420..22.422 rows=1 loops=1)
+   Buffers: shared hit=1583
+   ->  Hash Join  (cost=24.75..3399.12 rows=10220 width=17) (actual time=0.092..20.803 rows=10219 loops=1)
+         Hash Cond: (b."RoomId" = r."Id")
+         Buffers: shared hit=1583
+         ->  Seq Scan on bookings_2026_10 b  (cost=0.00..3104.97 rows=102198 width=21) (actual time=0.007..14.145 rows=102198 loops=1)
+               Filter: (("CheckInDate" >= '2026-10-01'::date) AND ("CheckInDate" <= '2026-10-31'::date))
+               Buffers: shared hit=1572
+         ->  Hash  (cost=23.50..23.50 rows=100 width=4) (actual time=0.078..0.079 rows=100 loops=1)
+               Buckets: 1024  Batches: 1  Memory Usage: 12kB
+               Buffers: shared hit=11
+               ->  Seq Scan on "Rooms" r  (cost=0.00..23.50 rows=100 width=4) (actual time=0.016..0.060 rows=100 loops=1)
+                     Filter: ("HotelId" = 1)
+                     Rows Removed by Filter: 900
+                     Buffers: shared hit=11
+ Planning:
+   Buffers: shared hit=34
+ Planning Time: 0.607 ms
+ Execution Time: 22.492 ms
+(19 rows)
+
+ partitioned_total_size 
+------------------------
+ 55 MB
+(1 row)
+
+ baseline_total_size 
+---------------------
+ 52 MB
+(1 row)
+
+psql:<stdin>:199: NOTICE:  CreatePartitionsJob started: Bookings, today=2026-09-11, horizon=3
+psql:<stdin>:199: NOTICE:  Partition created: bookings_2026_12
+psql:<stdin>:199: NOTICE:  CreatePartitionsJob finished: existing=3, required=4, created=1
+                                 create_partitions_job                                 
+---------------------------------------------------------------------------------------
+ {"target": "Bookings", "created": ["bookings_2026_12"], "existing": 3, "required": 4}
+(1 row)
+
+                                                                                                                partition_health_check                                                                                                                
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ {"table": "lab03.Bookings", "status": "OK", "message": "Partition check OK (recovery)", "checked_at": "2026-09-12T08:31:01.560962+00:00", "horizon_unit": "months", "reference_date": "2026-09-11", "expected_horizon": 3, "missing_partitions": []}
+(1 row)
+
+RESET

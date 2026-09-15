@@ -1,0 +1,20 @@
+SET
+SET
+BEGIN
+psql:<stdin>:80: NOTICE:  CreatePartitionsJob started: events, today=2099-01-31, horizon=3
+psql:<stdin>:80: NOTICE:  Partition created: events_2099_01_31
+psql:<stdin>:80: NOTICE:  Partition created: events_2099_02_01
+psql:<stdin>:80: NOTICE:  Partition created: events_2099_02_02
+psql:<stdin>:80: NOTICE:  Partition created: events_2099_02_03
+psql:<stdin>:80: NOTICE:  CreatePartitionsJob finished: existing=0, required=4, created=4
+psql:<stdin>:80: NOTICE:  CreatePartitionsJob started: events, today=2099-01-31, horizon=3
+psql:<stdin>:80: NOTICE:  CreatePartitionsJob finished: existing=4, required=4, created=0
+psql:<stdin>:80: NOTICE:  CreatePartitionsJob started: events, today=2099-01-31, horizon=3
+psql:<stdin>:80: NOTICE:  CreatePartitionsJob started: events, today=2099-01-31, horizon=3
+psql:<stdin>:80: NOTICE:  Partition created: events_2099_02_03
+psql:<stdin>:80: NOTICE:  CreatePartitionsJob finished: existing=3, required=4, created=1
+psql:<stdin>:80: NOTICE:  CreatePartitionsJob started: public.events, today=2026-09-12, horizon=3
+psql:<stdin>:80: NOTICE:  CreatePartitionsJob started: events, today=2026-09-12, horizon=-1
+psql:<stdin>:80: NOTICE:  PASS: idempotency, calendar, detached/wrong-bound partition, CRITICAL/recovery deduplication, arguments
+DO
+ROLLBACK

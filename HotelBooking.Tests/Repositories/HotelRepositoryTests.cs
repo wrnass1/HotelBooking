@@ -1,6 +1,7 @@
 using FluentAssertions;
 using HotelBooking.Data;
 using HotelBooking.Models.Entities;
+using HotelBooking.Models.DTO;
 using HotelBooking.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
@@ -10,6 +11,7 @@ namespace HotelBooking.Tests.Repositories;
 public class HotelRepositoryTests : IDisposable
 {
     private readonly HotelBookingDbContext _context;
+    private readonly HotelBookingReadDbContext _readContext;
     private readonly HotelRepository _repository;
 
     public HotelRepositoryTests()
@@ -19,7 +21,11 @@ public class HotelRepositoryTests : IDisposable
             .Options;
 
         _context = new HotelBookingDbContext(options);
-        _repository = new HotelRepository(_context);
+        var readOptions = new DbContextOptionsBuilder<HotelBookingReadDbContext>()
+            .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
+            .Options;
+        _readContext = new HotelBookingReadDbContext(readOptions);
+        _repository = new HotelRepository(_context, _readContext);
     }
 
     [Fact]
@@ -162,8 +168,41 @@ public class HotelRepositoryTests : IDisposable
         result.Should().BeFalse();
     }
 
+    [Fact]
+    public async Task GetPagedAsync_ShouldReadReplica_WhileWritesAndPointReadsUsePrimary()
+    {
+        // Distinct stores reproduce a standby that has not replayed a new hotel yet.
+        var hotel = await _repository.CreateAsync(new Hotel
+        {
+            Name = "Primary only", Address = "Address", City = "City",
+            Country = "Country", StarRating = 3
+        });
+
+        var catalog = await _repository.GetPagedAsync(new HotelQueryDto());
+        catalog.Total.Should().Be(0);
+        catalog.Items.Should().BeEmpty();
+        (await _repository.GetByIdAsync(hotel.Id)).Should().NotBeNull();
+        (await _repository.ExistsAsync(hotel.Id)).Should().BeTrue();
+
+        hotel.Name = "Updated on primary";
+        await _repository.UpdateAsync(hotel);
+        (await _repository.GetByIdAsync(hotel.Id))!.Name.Should().Be("Updated on primary");
+        (await _repository.GetPagedAsync(new HotelQueryDto())).Total.Should().Be(0);
+        (await _repository.DeleteAsync(hotel.Id)).Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task ReadContext_ShouldRejectSaveChanges()
+    {
+        Action save = () => _readContext.SaveChanges();
+        save.Should().Throw<InvalidOperationException>();
+        Func<Task> saveAsync = () => _readContext.SaveChangesAsync();
+        await saveAsync.Should().ThrowAsync<InvalidOperationException>();
+    }
+
     public void Dispose()
     {
+        _readContext.Dispose();
         _context.Dispose();
     }
 }

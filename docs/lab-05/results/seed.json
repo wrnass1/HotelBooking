@@ -1,0 +1,12 @@
+{
+  "utc": "2026-09-14T14:58:51.0012032Z",
+  "command": "seed",
+  "result": {
+    "rows": 100000,
+    "hotelId": 4,
+    "roomCount": 100,
+    "firstId": 1,
+    "lastId": 100000,
+    "reused": false
+  }
+}

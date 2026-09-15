@@ -10,6 +10,10 @@ public class HotelBookingDbContext : DbContext
     {
     }
 
+    protected HotelBookingDbContext(DbContextOptions options) : base(options)
+    {
+    }
+
     public DbSet<Hotel> Hotels { get; set; }
     public DbSet<Room> Rooms { get; set; }
     public DbSet<Booking> Bookings { get; set; }
@@ -19,6 +23,7 @@ public class HotelBookingDbContext : DbContext
     public DbSet<HotelFacility> HotelFacilities { get; set; }
     public DbSet<RoomAmenity> RoomAmenities { get; set; }
     public DbSet<ApiKey> ApiKeys { get; set; }
+    public DbSet<LabOrder> LabOrders { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -132,6 +137,21 @@ public class HotelBookingDbContext : DbContext
             entity.Property(e => e.Key).IsRequired().HasMaxLength(256);
             entity.Property(e => e.Name).IsRequired().HasMaxLength(100);
             entity.HasIndex(e => e.Key).IsUnique();
+        });
+
+        // Isolated table used only in laboratory work №1.
+        // Secondary indexes are intentionally created in the lab script.
+        modelBuilder.Entity<LabOrder>(entity =>
+        {
+            entity.ToTable("orders");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.CustomerId).HasColumnName("user_id");
+            entity.Property(e => e.ProductId).HasColumnName("product_id");
+            entity.Property(e => e.Status).HasColumnName("status").IsRequired().HasMaxLength(20);
+            entity.Property(e => e.TotalAmount).HasColumnName("amount").HasColumnType("numeric(10,2)");
+            entity.Property(e => e.CreatedAt).HasColumnName("created_at").IsRequired();
+            entity.Property(e => e.UpdatedAt).HasColumnName("updated_at").IsRequired();
         });
     }
 }

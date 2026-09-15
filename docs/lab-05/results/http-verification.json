@@ -1,0 +1,1509 @@
+{
+  "passed": true,
+  "placements": [
+    {
+      "id": 100001,
+      "expectedShard": 1,
+      "foundOnShards": [
+        1
+      ],
+      "onPrimary": false
+    },
+    {
+      "id": 100002,
+      "expectedShard": 0,
+      "foundOnShards": [
+        0
+      ],
+      "onPrimary": false
+    },
+    {
+      "id": 100003,
+      "expectedShard": 0,
+      "foundOnShards": [
+        0
+      ],
+      "onPrimary": false
+    },
+    {
+      "id": 100004,
+      "expectedShard": 2,
+      "foundOnShards": [
+        2
+      ],
+      "onPrimary": false
+    }
+  ],
+  "events": [
+    {
+      "method": "POST",
+      "path": "/api/Bookings",
+      "status": 201,
+      "body": {
+        "id": 100001,
+        "roomId": 1,
+        "roomNumber": "L05-000",
+        "hotelName": "Lab05 Sharding Hotel",
+        "guestName": "Lab05 HTTP fixture",
+        "guestEmail": "lab05.http@example.test",
+        "guestPhone": null,
+        "checkInDate": "2050-01-01T00:00:00",
+        "checkOutDate": "2050-01-02T00:00:00",
+        "numberOfGuests": 1,
+        "totalPrice": 200.0,
+        "status": "Confirmed",
+        "createdAt": "2026-09-14T15:03:58.5156711Z"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/Bookings/100001",
+      "status": 200,
+      "body": {
+        "id": 100001,
+        "roomId": 1,
+        "roomNumber": "L05-000",
+        "hotelName": "Lab05 Sharding Hotel",
+        "guestName": "Lab05 HTTP fixture",
+        "guestEmail": "lab05.http@example.test",
+        "guestPhone": null,
+        "checkInDate": "2050-01-01T00:00:00",
+        "checkOutDate": "2050-01-02T00:00:00",
+        "numberOfGuests": 1,
+        "totalPrice": 200.0,
+        "status": "Confirmed",
+        "createdAt": "2026-09-14T15:03:58.515671"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/Bookings",
+      "status": 201,
+      "body": {
+        "id": 100002,
+        "roomId": 1,
+        "roomNumber": "L05-000",
+        "hotelName": "Lab05 Sharding Hotel",
+        "guestName": "Lab05 HTTP fixture",
+        "guestEmail": "lab05.http@example.test",
+        "guestPhone": null,
+        "checkInDate": "2050-01-03T00:00:00",
+        "checkOutDate": "2050-01-04T00:00:00",
+        "numberOfGuests": 1,
+        "totalPrice": 200.0,
+        "status": "Confirmed",
+        "createdAt": "2026-09-14T15:03:58.8894658Z"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/Bookings/100002",
+      "status": 200,
+      "body": {
+        "id": 100002,
+        "roomId": 1,
+        "roomNumber": "L05-000",
+        "hotelName": "Lab05 Sharding Hotel",
+        "guestName": "Lab05 HTTP fixture",
+        "guestEmail": "lab05.http@example.test",
+        "guestPhone": null,
+        "checkInDate": "2050-01-03T00:00:00",
+        "checkOutDate": "2050-01-04T00:00:00",
+        "numberOfGuests": 1,
+        "totalPrice": 200.0,
+        "status": "Confirmed",
+        "createdAt": "2026-09-14T15:03:58.889465"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/Bookings",
+      "status": 201,
+      "body": {
+        "id": 100003,
+        "roomId": 1,
+        "roomNumber": "L05-000",
+        "hotelName": "Lab05 Sharding Hotel",
+        "guestName": "Lab05 HTTP fixture",
+        "guestEmail": "lab05.http@example.test",
+        "guestPhone": null,
+        "checkInDate": "2050-01-05T00:00:00",
+        "checkOutDate": "2050-01-06T00:00:00",
+        "numberOfGuests": 1,
+        "totalPrice": 200.0,
+        "status": "Confirmed",
+        "createdAt": "2026-09-14T15:03:58.9663813Z"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/Bookings/100003",
+      "status": 200,
+      "body": {
+        "id": 100003,
+        "roomId": 1,
+        "roomNumber": "L05-000",
+        "hotelName": "Lab05 Sharding Hotel",
+        "guestName": "Lab05 HTTP fixture",
+        "guestEmail": "lab05.http@example.test",
+        "guestPhone": null,
+        "checkInDate": "2050-01-05T00:00:00",
+        "checkOutDate": "2050-01-06T00:00:00",
+        "numberOfGuests": 1,
+        "totalPrice": 200.0,
+        "status": "Confirmed",
+        "createdAt": "2026-09-14T15:03:58.966381"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/Bookings",
+      "status": 201,
+      "body": {
+        "id": 100004,
+        "roomId": 1,
+        "roomNumber": "L05-000",
+        "hotelName": "Lab05 Sharding Hotel",
+        "guestName": "Lab05 HTTP fixture",
+        "guestEmail": "lab05.http@example.test",
+        "guestPhone": null,
+        "checkInDate": "2050-01-07T00:00:00",
+        "checkOutDate": "2050-01-08T00:00:00",
+        "numberOfGuests": 1,
+        "totalPrice": 200.0,
+        "status": "Confirmed",
+        "createdAt": "2026-09-14T15:03:59.0147502Z"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/Bookings/100004",
+      "status": 200,
+      "body": {
+        "id": 100004,
+        "roomId": 1,
+        "roomNumber": "L05-000",
+        "hotelName": "Lab05 Sharding Hotel",
+        "guestName": "Lab05 HTTP fixture",
+        "guestEmail": "lab05.http@example.test",
+        "guestPhone": null,
+        "checkInDate": "2050-01-07T00:00:00",
+        "checkOutDate": "2050-01-08T00:00:00",
+        "numberOfGuests": 1,
+        "totalPrice": 200.0,
+        "status": "Confirmed",
+        "createdAt": "2026-09-14T15:03:59.01475"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/Bookings/100001",
+      "status": 200,
+      "body": {
+        "id": 100001,
+        "roomId": 1,
+        "roomNumber": "L05-000",
+        "hotelName": "Lab05 Sharding Hotel",
+        "guestName": "Lab05 HTTP updated",
+        "guestEmail": "lab05.http@example.test",
+        "guestPhone": null,
+        "checkInDate": "2050-01-01T00:00:00",
+        "checkOutDate": "2050-01-02T00:00:00",
+        "numberOfGuests": 1,
+        "totalPrice": 200.0,
+        "status": "Confirmed",
+        "createdAt": "2026-09-14T15:03:58.515671"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/Bookings/100001",
+      "status": 200,
+      "body": {
+        "id": 100001,
+        "roomId": 1,
+        "roomNumber": "L05-000",
+        "hotelName": "Lab05 Sharding Hotel",
+        "guestName": "Lab05 HTTP updated",
+        "guestEmail": "lab05.http@example.test",
+        "guestPhone": null,
+        "checkInDate": "2050-01-01T00:00:00",
+        "checkOutDate": "2050-01-02T00:00:00",
+        "numberOfGuests": 1,
+        "totalPrice": 200.0,
+        "status": "Confirmed",
+        "createdAt": "2026-09-14T15:03:58.515671"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/Bookings/guest/lab05.http%40example.test",
+      "status": 200,
+      "body": [
+        {
+          "id": 100001,
+          "roomId": 1,
+          "roomNumber": "L05-000",
+          "hotelName": "Lab05 Sharding Hotel",
+          "guestName": "Lab05 HTTP updated",
+          "guestEmail": "lab05.http@example.test",
+          "guestPhone": null,
+          "checkInDate": "2050-01-01T00:00:00",
+          "checkOutDate": "2050-01-02T00:00:00",
+          "numberOfGuests": 1,
+          "totalPrice": 200.0,
+          "status": "Confirmed",
+          "createdAt": "2026-09-14T15:03:58.515671"
+        },
+        {
+          "id": 100002,
+          "roomId": 1,
+          "roomNumber": "L05-000",
+          "hotelName": "Lab05 Sharding Hotel",
+          "guestName": "Lab05 HTTP fixture",
+          "guestEmail": "lab05.http@example.test",
+          "guestPhone": null,
+          "checkInDate": "2050-01-03T00:00:00",
+          "checkOutDate": "2050-01-04T00:00:00",
+          "numberOfGuests": 1,
+          "totalPrice": 200.0,
+          "status": "Confirmed",
+          "createdAt": "2026-09-14T15:03:58.889465"
+        },
+        {
+          "id": 100003,
+          "roomId": 1,
+          "roomNumber": "L05-000",
+          "hotelName": "Lab05 Sharding Hotel",
+          "guestName": "Lab05 HTTP fixture",
+          "guestEmail": "lab05.http@example.test",
+          "guestPhone": null,
+          "checkInDate": "2050-01-05T00:00:00",
+          "checkOutDate": "2050-01-06T00:00:00",
+          "numberOfGuests": 1,
+          "totalPrice": 200.0,
+          "status": "Confirmed",
+          "createdAt": "2026-09-14T15:03:58.966381"
+        },
+        {
+          "id": 100004,
+          "roomId": 1,
+          "roomNumber": "L05-000",
+          "hotelName": "Lab05 Sharding Hotel",
+          "guestName": "Lab05 HTTP fixture",
+          "guestEmail": "lab05.http@example.test",
+          "guestPhone": null,
+          "checkInDate": "2050-01-07T00:00:00",
+          "checkOutDate": "2050-01-08T00:00:00",
+          "numberOfGuests": 1,
+          "totalPrice": 200.0,
+          "status": "Confirmed",
+          "createdAt": "2026-09-14T15:03:59.01475"
+        }
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/Rooms/available?hotelId=4&checkIn=2050-01-01&checkOut=2050-01-02",
+      "status": 200,
+      "body": [
+        {
+          "id": 2,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-001",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 3,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-002",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 4,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-003",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 5,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-004",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 6,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-005",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 7,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-006",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 8,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-007",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 9,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-008",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 10,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-009",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 11,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-010",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 12,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-011",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 13,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-012",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 14,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-013",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 15,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-014",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 16,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-015",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 17,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-016",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 18,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-017",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 19,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-018",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 20,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-019",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 21,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-020",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 22,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-021",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 23,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-022",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 24,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-023",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 25,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-024",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 26,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-025",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 27,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-026",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 28,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-027",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 29,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-028",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 30,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-029",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 31,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-030",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 32,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-031",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 33,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-032",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 34,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-033",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 35,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-034",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 36,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-035",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 37,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-036",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 38,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-037",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 39,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-038",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 40,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-039",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 41,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-040",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 42,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-041",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 43,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-042",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 44,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-043",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 45,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-044",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 46,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-045",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 47,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-046",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 48,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-047",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 49,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-048",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 50,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-049",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 51,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-050",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 52,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-051",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 53,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-052",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 54,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-053",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 55,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-054",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 56,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-055",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 57,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-056",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 58,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-057",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 59,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-058",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 60,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-059",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 61,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-060",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 62,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-061",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 63,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-062",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 64,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-063",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 65,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-064",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 66,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-065",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 67,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-066",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 68,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-067",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 69,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-068",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 70,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-069",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 71,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-070",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 72,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-071",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 73,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-072",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 74,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-073",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 75,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-074",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 76,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-075",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 77,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-076",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 78,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-077",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 79,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-078",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 80,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-079",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 81,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-080",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 82,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-081",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 83,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-082",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 84,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-083",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 85,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-084",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 86,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-085",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 87,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-086",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 88,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-087",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 89,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-088",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 90,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-089",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 91,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-090",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 92,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-091",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 93,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-092",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 94,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-093",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 95,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-094",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 96,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-095",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 97,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-096",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 98,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-097",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 99,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-098",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        },
+        {
+          "id": 100,
+          "hotelId": 4,
+          "hotelName": "Lab05 Sharding Hotel",
+          "roomNumber": "L05-099",
+          "roomType": "Double",
+          "pricePerNight": 200.0,
+          "maxOccupancy": 2,
+          "description": null,
+          "isAvailable": true
+        }
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/Bookings/100001/cancel",
+      "status": 200,
+      "body": {
+        "message": "Booking cancelled successfully"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/Bookings/100001",
+      "status": 200,
+      "body": {
+        "id": 100001,
+        "roomId": 1,
+        "roomNumber": "L05-000",
+        "hotelName": "Lab05 Sharding Hotel",
+        "guestName": "Lab05 HTTP updated",
+        "guestEmail": "lab05.http@example.test",
+        "guestPhone": null,
+        "checkInDate": "2050-01-01T00:00:00",
+        "checkOutDate": "2050-01-02T00:00:00",
+        "numberOfGuests": 1,
+        "totalPrice": 200.0,
+        "status": "Cancelled",
+        "createdAt": "2026-09-14T15:03:58.515671"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/Bookings/100001",
+      "status": 204,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/Bookings/100001",
+      "status": 404,
+      "body": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.5\",\"title\":\"Not Found\",\"status\":404,\"traceId\":\"00-428a8d71760ce774d2399c1a4ae3ae79-cb665edd82438f03-00\"}"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/Bookings/100002",
+      "status": 204,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/Bookings/100002",
+      "status": 404,
+      "body": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.5\",\"title\":\"Not Found\",\"status\":404,\"traceId\":\"00-e187bfbdd67a583232659886c9910012-629c4ed8c3d6b955-00\"}"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/Bookings/100003",
+      "status": 204,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/Bookings/100003",
+      "status": 404,
+      "body": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.5\",\"title\":\"Not Found\",\"status\":404,\"traceId\":\"00-9aab241701d33065f1977e4b93a44715-7a90d6536fb0aec6-00\"}"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/Bookings/100004",
+      "status": 204,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/Bookings/100004",
+      "status": 404,
+      "body": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.5\",\"title\":\"Not Found\",\"status\":404,\"traceId\":\"00-08649716daa8f6819342c922a2aa44ee-cad3ea7b9ed7d8f5-00\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/health",
+      "status": 200,
+      "body": {
+        "status": "Healthy",
+        "checks": [
+          {
+            "name": "postgresql",
+            "status": "Healthy",
+            "description": null
+          },
+          {
+            "name": "postgresql-replica",
+            "status": "Healthy",
+            "description": null
+          },
+          {
+            "name": "redis",
+            "status": "Healthy",
+            "description": null
+          }
+        ]
+      }
+    }
+  ],
+  "fixturesDeleted": [
+    100001,
+    100002,
+    100003,
+    100004
+  ]
+}

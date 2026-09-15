@@ -1,0 +1,3 @@
+Command: dotnet test HotelBooking.Tests/HotelBooking.Tests.csproj --no-restore --verbosity minimal
+Completion output (package warnings omitted; dependencies unchanged):
+Пройден!   : не пройдено     0, пройдено    21, пропущено     0, всего    21, длительность 5 s. - HotelBooking.Tests.dll (net10.0)

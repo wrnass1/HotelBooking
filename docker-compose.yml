@@ -1,7 +1,40 @@
+include:
+  - docker-compose.shards.yml
+
 services:
   postgres:
-    image: postgres:16-alpine
+    build:
+      context: ./docker/postgres
+    image: hotelbooking-postgres-cron:16
     container_name: hotelbooking-postgres
+    command:
+      - postgres
+      - -c
+      - shared_preload_libraries=pg_cron
+      - -c
+      - cron.database_name=hotelbooking
+      - -c
+      - cron.timezone=UTC
+      - -c
+      - cron.use_background_workers=on
+      - -c
+      - cron.max_running_jobs=4
+      - -c
+      - max_worker_processes=16
+      - -c
+      - timezone=UTC
+      - -c
+      - wal_level=replica
+      - -c
+      - max_wal_senders=10
+      - -c
+      - max_replication_slots=10
+      - -c
+      - wal_keep_size=256MB
+      - -c
+      - max_slot_wal_keep_size=1GB
+      - -c
+      - hba_file=/etc/postgresql/pg_hba.conf
     environment:
       POSTGRES_DB: hotelbooking
       POSTGRES_USER: hotelbooking_user
@@ -10,11 +43,36 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/pg_hba.conf:/etc/postgresql/pg_hba.conf:ro
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U hotelbooking_user"]
+      test: ["CMD-SHELL", "pg_isready -U hotelbooking_user -d hotelbooking"]
       interval: 10s
       timeout: 5s
       retries: 5
+
+  postgres-replica:
+    build:
+      context: ./docker/postgres
+    image: hotelbooking-postgres-cron:16
+    container_name: hotelbooking-postgres-replica
+    entrypoint: ["/bin/sh", "/opt/replication/start-replica.sh"]
+    environment:
+      PGDATA: /var/lib/postgresql/data
+      PGPASSWORD: lab04_replication_password
+    ports:
+      - "127.0.0.1:5433:5432"
+    volumes:
+      - postgres_replica_data:/var/lib/postgresql/data
+      - ./docker/postgres/start-replica.sh:/opt/replication/start-replica.sh:ro
+    depends_on:
+      liquibase:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD-SHELL", "psql -X -U hotelbooking_user -d hotelbooking -Atc 'SELECT pg_is_in_recovery()' | grep -qx t"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
 
   redis:
     image: redis:7-alpine
@@ -59,6 +117,11 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
       - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=hotelbooking;Username=hotelbooking_user;Password=hotelbooking_password
+      - ConnectionStrings__ReadConnection=Host=postgres-replica;Port=5432;Database=hotelbooking;Username=hotelbooking_reader;Password=lab04_reader_password;Application Name=hotelbooking-catalog-replica
+      - Sharding__Enabled=true
+      - Sharding__Connections__0=Host=postgres-shard-0;Database=hotelbooking_shard;Username=hotelbooking_shard_user;Password=hotelbooking_shard_password;Application Name=hotelbooking-bookings-shard-0
+      - Sharding__Connections__1=Host=postgres-shard-1;Database=hotelbooking_shard;Username=hotelbooking_shard_user;Password=hotelbooking_shard_password;Application Name=hotelbooking-bookings-shard-1
+      - Sharding__Connections__2=Host=postgres-shard-2;Database=hotelbooking_shard;Username=hotelbooking_shard_user;Password=hotelbooking_shard_password;Application Name=hotelbooking-bookings-shard-2
       - Redis__ConnectionString=redis:6379
       - ConnectionStrings__Redis=redis:6379
       - JwtSettings__SecretKey=YourSuperSecretKeyForJWTTokenGenerationThatShouldBeAtLeast32CharactersLong
@@ -72,7 +135,16 @@ services:
         condition: service_healthy
       liquibase:
         condition: service_completed_successfully
+      postgres-replica:
+        condition: service_healthy
+      liquibase-shard-0:
+        condition: service_completed_successfully
+      liquibase-shard-1:
+        condition: service_completed_successfully
+      liquibase-shard-2:
+        condition: service_completed_successfully
 
 volumes:
   postgres_data:
+  postgres_replica_data:
   redis_data:

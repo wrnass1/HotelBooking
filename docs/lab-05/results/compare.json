@@ -1,0 +1,138 @@
+{
+  "utc": "2026-09-14T15:02:53.7123483Z",
+  "command": "compare",
+  "result": {
+    "entity": "Bookings",
+    "shardKey": "Id",
+    "hash": "SHA-256(UTF-8 decimal Id), first 8 bytes, unsigned big-endian",
+    "activeLayout": "sha256-u64be-v1|Modulo|1|shard-0,shard-1,shard-2",
+    "total": 100000,
+    "actualCounts": {
+      "shard-0": 33219,
+      "shard-1": 33353,
+      "shard-2": 33428
+    },
+    "samples": {
+      "shard-0": [
+        6,
+        8,
+        9
+      ],
+      "shard-1": [
+        1,
+        2,
+        3
+      ],
+      "shard-2": [
+        5,
+        7,
+        13
+      ]
+    },
+    "experiments": [
+      {
+        "strategy": "Modulo",
+        "virtualNodes": 1,
+        "total": 100000,
+        "moved": 74969,
+        "unchanged": 25031,
+        "movedPercent": 74.969,
+        "oldToOld": 49822,
+        "distributionBefore": {
+          "shard-0": 33219,
+          "shard-1": 33353,
+          "shard-2": 33428
+        },
+        "distributionAfter": {
+          "shard-0": 25014,
+          "shard-1": 24868,
+          "shard-2": 24971,
+          "shard-3": 25147
+        },
+        "addedFifthMoved": 79651,
+        "removedShard1Moved": 74835,
+        "ringBefore": null,
+        "ringAfter": null
+      },
+      {
+        "strategy": "ConsistentHash",
+        "virtualNodes": 1,
+        "total": 100000,
+        "moved": 47324,
+        "unchanged": 52676,
+        "movedPercent": 47.324,
+        "oldToOld": 0,
+        "distributionBefore": {
+          "shard-0": 69500,
+          "shard-1": 18273,
+          "shard-2": 12227
+        },
+        "distributionAfter": {
+          "shard-0": 22176,
+          "shard-1": 18273,
+          "shard-2": 12227,
+          "shard-3": 47324
+        },
+        "addedFifthMoved": 4074,
+        "removedShard1Moved": 18273,
+        "ringBefore": [
+          {
+            "position": "28585A5647107643",
+            "shard": "shard-1"
+          },
+          {
+            "position": "47AFA04D222D2283",
+            "shard": "shard-2"
+          },
+          {
+            "position": "F979E40276AF1D28",
+            "shard": "shard-0"
+          }
+        ],
+        "ringAfter": [
+          {
+            "position": "28585A5647107643",
+            "shard": "shard-1"
+          },
+          {
+            "position": "47AFA04D222D2283",
+            "shard": "shard-2"
+          },
+          {
+            "position": "C0FCA27CDF31036E",
+            "shard": "shard-3"
+          },
+          {
+            "position": "F979E40276AF1D28",
+            "shard": "shard-0"
+          }
+        ]
+      },
+      {
+        "strategy": "ConsistentHash",
+        "virtualNodes": 128,
+        "total": 100000,
+        "moved": 23669,
+        "unchanged": 76331,
+        "movedPercent": 23.669,
+        "oldToOld": 0,
+        "distributionBefore": {
+          "shard-0": 34824,
+          "shard-1": 29901,
+          "shard-2": 35275
+        },
+        "distributionAfter": {
+          "shard-0": 25565,
+          "shard-1": 24623,
+          "shard-2": 26143,
+          "shard-3": 23669
+        },
+        "addedFifthMoved": 18613,
+        "removedShard1Moved": 24623,
+        "ringBefore": null,
+        "ringAfter": null
+      }
+    ],
+    "note": "3->4 is a routing simulation over actual stored IDs, not a physical data migration."
+  }
+}

@@ -1,0 +1,67 @@
+# Independent writable PostgreSQL nodes for Bookings (laboratory 5).
+x-shard: &shard
+  image: postgres:16-alpine
+  environment:
+    POSTGRES_DB: hotelbooking_shard
+    POSTGRES_USER: hotelbooking_shard_user
+    POSTGRES_PASSWORD: hotelbooking_shard_password
+  healthcheck:
+    test: ["CMD-SHELL", "pg_isready -U hotelbooking_shard_user -d hotelbooking_shard"]
+    interval: 5s
+    timeout: 5s
+    retries: 20
+
+x-migration: &migration
+  image: liquibase/liquibase:latest
+  volumes:
+    - ./liquibase/shards:/changelog:ro
+    - ./liquibase/lib:/liquibase/lib:ro
+  environment: &migration-env
+    LIQUIBASE_COMMAND_CHANGELOG_FILE: changelog.xml
+    LIQUIBASE_SEARCH_PATH: /changelog
+    LIQUIBASE_COMMAND_USERNAME: hotelbooking_shard_user
+    LIQUIBASE_COMMAND_PASSWORD: hotelbooking_shard_password
+  command: ["update"]
+
+services:
+  postgres-shard-0:
+    <<: *shard
+    container_name: hotelbooking-shard-0
+    ports: ["127.0.0.1:5434:5432"]
+    volumes: ["shard_0_data:/var/lib/postgresql/data"]
+  postgres-shard-1:
+    <<: *shard
+    container_name: hotelbooking-shard-1
+    ports: ["127.0.0.1:5435:5432"]
+    volumes: ["shard_1_data:/var/lib/postgresql/data"]
+  postgres-shard-2:
+    <<: *shard
+    container_name: hotelbooking-shard-2
+    ports: ["127.0.0.1:5436:5432"]
+    volumes: ["shard_2_data:/var/lib/postgresql/data"]
+  liquibase-shard-0:
+    <<: *migration
+    environment:
+      <<: *migration-env
+      LIQUIBASE_COMMAND_URL: jdbc:postgresql://postgres-shard-0:5432/hotelbooking_shard
+    depends_on:
+      postgres-shard-0: {condition: service_healthy}
+  liquibase-shard-1:
+    <<: *migration
+    environment:
+      <<: *migration-env
+      LIQUIBASE_COMMAND_URL: jdbc:postgresql://postgres-shard-1:5432/hotelbooking_shard
+    depends_on:
+      postgres-shard-1: {condition: service_healthy}
+  liquibase-shard-2:
+    <<: *migration
+    environment:
+      <<: *migration-env
+      LIQUIBASE_COMMAND_URL: jdbc:postgresql://postgres-shard-2:5432/hotelbooking_shard
+    depends_on:
+      postgres-shard-2: {condition: service_healthy}
+
+volumes:
+  shard_0_data:
+  shard_1_data:
+  shard_2_data:

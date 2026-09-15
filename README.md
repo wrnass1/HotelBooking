@@ -50,10 +50,23 @@ docker-compose up -d
 ```
 
 Это запустит:
-- PostgreSQL на порту 5432
+- PostgreSQL Primary на порту 5432 и Replica на порту 5433
+- Три PostgreSQL-шарда бронирований на портах 5434, 5435 и 5436
 - Redis на порту 6379
 - Liquibase для создания схемы БД
 - API на порту 8080
+
+Каталог `GET /api/hotels` при отсутствии результата в Redis читает Replica через
+`ConnectionStrings:ReadConnection`. Запись и точечное чтение отелей используют Primary
+через `DefaultConnection`. Конфигурация и проверка репликации описаны в
+[лабораторной №4](docs/lab-04-read-scaling-report.md).
+
+После [лабораторной №5](docs/lab-05-sharding-report.md) операции с `Bookings`
+используют три независимых шарда: `SHA-256(Id) % 3`. Справочники и последовательность Id
+остаются на Primary. При первом переходе с прежнего хранилища выполните подготовку
+из отчёта №5; она импортирует существующие бронирования при остановленном API.
+Сравнение с Consistent Hashing запускается внутри самого backend командой
+`docker exec hotelbooking-api dotnet HotelBooking.dll --lab05 compare`.
 
 ### Доступ к API
 

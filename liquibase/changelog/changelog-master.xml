@@ -14,5 +14,12 @@
     <include file="007-create-room-amenities-table.sql"/>
     <include file="008-create-bookings-table.sql"/>
     <include file="009-create-api-keys-table.sql"/>
+    <include file="010-create-lab-orders-table.sql"/>
+    <include file="011-create-lab-orders.sql"/>
+    <include file="012-create-lab-users.sql"/>
+    <include file="013-create-lab-events.sql"/>
+    <include file="014-create-lab-partitioning.sql"/>
+    <include file="015-schedule-lab-partitions-pg-cron.sql"/>
+    <include file="016-configure-read-replica.sql"/>
 
 </databaseChangeLog>

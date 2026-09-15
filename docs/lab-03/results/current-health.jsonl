@@ -1,0 +1,9 @@
+{"at": "2026-09-12T08:39:17.591875+00:00", "event": "database_notice", "message": "NOTICE:  CreatePartitionsJob started: events, today=2026-09-12, horizon=3"}
+{"at": "2026-09-12T08:39:17.591955+00:00", "event": "database_notice", "message": "NOTICE:  Partition created: events_2026_09_15"}
+{"at": "2026-09-12T08:39:17.591976+00:00", "event": "database_notice", "message": "NOTICE:  CreatePartitionsJob finished: existing=3, required=4, created=1"}
+{"at": "2026-09-12T08:39:17.592008+00:00", "event": "CreatePartitionsJob", "target": "events", "created": ["events_2026_09_15"], "existing": 3, "required": 4}
+{"at": "2026-09-12T08:39:17.714552+00:00", "event": "database_notice", "message": "NOTICE:  CreatePartitionsJob started: Bookings, today=2026-09-12, horizon=3"}
+{"at": "2026-09-12T08:39:17.714630+00:00", "event": "database_notice", "message": "NOTICE:  CreatePartitionsJob finished: existing=4, required=4, created=0"}
+{"at": "2026-09-12T08:39:17.714691+00:00", "event": "CreatePartitionsJob", "target": "Bookings", "created": [], "existing": 4, "required": 4}
+{"at": "2026-09-12T08:39:18.046846+00:00", "event": "PartitionHealthCheck", "table": "lab03.events", "status": "OK", "message": "Partition check OK (recovery)", "checked_at": "2026-09-12T08:39:18.019859+00:00", "horizon_unit": "days", "reference_date": "2026-09-12", "expected_horizon": 3, "missing_partitions": []}
+{"at": "2026-09-12T08:39:18.175092+00:00", "event": "PartitionHealthCheck", "table": "lab03.Bookings", "status": "OK", "message": "Partition check OK (recovery)", "checked_at": "2026-09-12T08:39:18.148299+00:00", "horizon_unit": "months", "reference_date": "2026-09-12", "expected_horizon": 3, "missing_partitions": []}

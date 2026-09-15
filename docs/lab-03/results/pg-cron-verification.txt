@@ -1,0 +1,120 @@
+BEGIN
+psql:<stdin>:44: NOTICE:  CreatePartitionsJob started: events, today=2026-09-13, horizon=3
+psql:<stdin>:44: NOTICE:  CreatePartitionsJob finished: existing=4, required=4, created=0
+DO
+psql:<stdin>:44: NOTICE:  PASS: pg_cron settings, idempotent registration, four schedules, UTC wrapper and result log
+ROLLBACK
+
+SET
+SET
+BEGIN
+psql:<stdin>:80: NOTICE:  CreatePartitionsJob started: events, today=2099-01-31, horizon=3
+psql:<stdin>:80: NOTICE:  Partition created: events_2099_01_31
+psql:<stdin>:80: NOTICE:  Partition created: events_2099_02_01
+psql:<stdin>:80: NOTICE:  Partition created: events_2099_02_02
+psql:<stdin>:80: NOTICE:  Partition created: events_2099_02_03
+psql:<stdin>:80: NOTICE:  CreatePartitionsJob finished: existing=0, required=4, created=4
+psql:<stdin>:80: NOTICE:  CreatePartitionsJob started: events, today=2099-01-31, horizon=3
+psql:<stdin>:80: NOTICE:  CreatePartitionsJob finished: existing=4, required=4, created=0
+psql:<stdin>:80: NOTICE:  CreatePartitionsJob started: events, today=2099-01-31, horizon=3
+psql:<stdin>:80: NOTICE:  CreatePartitionsJob started: events, today=2099-01-31, horizon=3
+psql:<stdin>:80: NOTICE:  Partition created: events_2099_02_03
+psql:<stdin>:80: NOTICE:  CreatePartitionsJob finished: existing=3, required=4, created=1
+psql:<stdin>:80: NOTICE:  CreatePartitionsJob started: public.events, today=2026-09-13, horizon=3
+psql:<stdin>:80: NOTICE:  CreatePartitionsJob started: events, today=2026-09-13, horizon=-1
+psql:<stdin>:80: NOTICE:  PASS: idempotency, calendar, detached/wrong-bound partition, CRITICAL/recovery deduplication, arguments
+DO
+ROLLBACK
+
+ extname | extversion 
+---------+------------
+ pg_cron | 1.6
+(1 row)
+
+ shared_preload_libraries 
+--------------------------
+ pg_cron
+(1 row)
+
+ cron.database_name 
+--------------------
+ hotelbooking
+(1 row)
+
+ cron.timezone 
+---------------
+ UTC
+(1 row)
+
+ cron.use_background_workers 
+-----------------------------
+ on
+(1 row)
+
+ schedule_partition_jobs 
+-------------------------
+ 
+(1 row)
+
+ jobid |        jobname        |  schedule   | active |   database   |     username      |                        command                         
+-------+-----------------------+-------------+--------+--------------+-------------------+--------------------------------------------------------
+     1 | lab03-create-events   | 0 1 * * *   | t      | hotelbooking | hotelbooking_user | SELECT lab03.run_partition_task('create', 'events');
+     2 | lab03-create-bookings | 0 1 * * *   | t      | hotelbooking | hotelbooking_user | SELECT lab03.run_partition_task('create', 'Bookings');
+     3 | lab03-check-events    | */5 * * * * | t      | hotelbooking | hotelbooking_user | SELECT lab03.run_partition_task('check', 'events');
+     4 | lab03-check-bookings  | */5 * * * * | t      | hotelbooking | hotelbooking_user | SELECT lab03.run_partition_task('check', 'Bookings');
+(4 rows)
+
+        jobname        | runid |  status   | return_message |          start_time           |           end_time            
+-----------------------+-------+-----------+----------------+-------------------------------+-------------------------------
+ lab03-check-bookings  |    12 | succeeded | SELECT 1       | 2026-09-13 18:32:06.107782+00 | 2026-09-13 18:32:06.13097+00
+ lab03-check-bookings  |    11 | succeeded | SELECT 1       | 2026-09-13 18:32:04.102596+00 | 2026-09-13 18:32:04.127026+00
+ lab03-create-bookings |    10 | succeeded | SELECT 1       | 2026-09-13 18:32:03.130028+00 | 2026-09-13 18:32:03.177037+00
+ lab03-check-bookings  |     9 | succeeded | SELECT 1       | 2026-09-13 18:32:02.096072+00 | 2026-09-13 18:32:02.116559+00
+ lab03-check-bookings  |     8 | succeeded | SELECT 1       | 2026-09-13 18:32:00.090948+00 | 2026-09-13 18:32:00.12124+00
+ lab03-check-bookings  |     7 | succeeded | SELECT 1       | 2026-09-13 18:31:58.084677+00 | 2026-09-13 18:31:58.116086+00
+ lab03-check-events    |     6 | succeeded | SELECT 1       | 2026-09-13 18:31:54.07715+00  | 2026-09-13 18:31:54.09445+00
+ lab03-check-events    |     5 | succeeded | SELECT 1       | 2026-09-13 18:31:52.073306+00 | 2026-09-13 18:31:52.11438+00
+ lab03-create-events   |     4 | succeeded | SELECT 1       | 2026-09-13 18:31:52.069955+00 | 2026-09-13 18:31:52.105222+00
+ lab03-check-events    |     3 | succeeded | SELECT 1       | 2026-09-13 18:31:50.070359+00 | 2026-09-13 18:31:50.096439+00
+ lab03-check-events    |     2 | succeeded | SELECT 1       | 2026-09-13 18:31:48.064921+00 | 2026-09-13 18:31:48.079835+00
+ lab03-check-events    |     1 | succeeded | SELECT 1       | 2026-09-13 18:31:46.061452+00 | 2026-09-13 18:31:46.085465+00
+(12 rows)
+
+ id |  task  |  target  |                                                                                                                             result                                                                                                                             |          finished_at          
+----+--------+----------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------
+ 16 | check  | Bookings | {"table": "lab03.Bookings", "status": "OK", "message": "Partition check OK (recovery)", "checked_at": "2026-09-13T18:32:06.115898+00:00", "horizon_unit": "months", "reference_date": "2026-09-13", "expected_horizon": 3, "missing_partitions": []}           | 2026-09-13 18:32:06.126587+00
+ 15 | check  | Bookings | {"table": "lab03.Bookings", "status": "OK", "message": "Partition check OK (recovery)", "checked_at": "2026-09-13T18:32:04.109105+00:00", "horizon_unit": "months", "reference_date": "2026-09-13", "expected_horizon": 3, "missing_partitions": []}           | 2026-09-13 18:32:04.12322+00
+ 14 | create | Bookings | {"target": "Bookings", "created": ["bookings_2026_12"], "existing": 3, "required": 4}                                                                                                                                                                          | 2026-09-13 18:32:03.17318+00
+ 13 | check  | Bookings | {"table": "lab03.Bookings", "status": "CRITICAL", "message": "Partition alert", "checked_at": "2026-09-13T18:32:02.101012+00:00", "horizon_unit": "months", "reference_date": "2026-09-13", "expected_horizon": 3, "missing_partitions": ["bookings_2026_12"]} | 2026-09-13 18:32:02.111648+00
+ 12 | check  | Bookings | {"table": "lab03.Bookings", "status": "CRITICAL", "message": "Partition alert", "checked_at": "2026-09-13T18:32:00.099253+00:00", "horizon_unit": "months", "reference_date": "2026-09-13", "expected_horizon": 3, "missing_partitions": ["bookings_2026_12"]} | 2026-09-13 18:32:00.116787+00
+ 11 | check  | Bookings | {"table": "lab03.Bookings", "status": "CRITICAL", "message": "Partition alert", "checked_at": "2026-09-13T18:31:58.101487+00:00", "horizon_unit": "months", "reference_date": "2026-09-13", "expected_horizon": 3, "missing_partitions": ["bookings_2026_12"]} | 2026-09-13 18:31:58.11117+00
+ 10 | check  | events   | {"table": "lab03.events", "status": "OK", "message": "Partition check OK (recovery)", "checked_at": "2026-09-13T18:31:54.081553+00:00", "horizon_unit": "days", "reference_date": "2026-09-13", "expected_horizon": 3, "missing_partitions": []}               | 2026-09-13 18:31:54.090572+00
+  9 | check  | events   | {"table": "lab03.events", "status": "OK", "message": "Partition check OK (recovery)", "checked_at": "2026-09-13T18:31:52.080291+00:00", "horizon_unit": "days", "reference_date": "2026-09-13", "expected_horizon": 3, "missing_partitions": []}               | 2026-09-13 18:31:52.110698+00
+  8 | create | events   | {"target": "events", "created": ["events_2026_09_16"], "existing": 3, "required": 4}                                                                                                                                                                           | 2026-09-13 18:31:52.100379+00
+  7 | check  | events   | {"table": "lab03.events", "status": "CRITICAL", "message": "Partition alert", "checked_at": "2026-09-13T18:31:50.076822+00:00", "horizon_unit": "days", "reference_date": "2026-09-13", "expected_horizon": 3, "missing_partitions": ["events_2026_09_16"]}    | 2026-09-13 18:31:50.091637+00
+  6 | check  | events   | {"table": "lab03.events", "status": "CRITICAL", "message": "Partition alert", "checked_at": "2026-09-13T18:31:48.068808+00:00", "horizon_unit": "days", "reference_date": "2026-09-13", "expected_horizon": 3, "missing_partitions": ["events_2026_09_16"]}    | 2026-09-13 18:31:48.075671+00
+  5 | check  | events   | {"table": "lab03.events", "status": "CRITICAL", "message": "Partition alert", "checked_at": "2026-09-13T18:31:46.068313+00:00", "horizon_unit": "days", "reference_date": "2026-09-13", "expected_horizon": 3, "missing_partitions": ["events_2026_09_16"]}    | 2026-09-13 18:31:46.080477+00
+  4 | check  | Bookings | {"table": "lab03.Bookings", "status": "OK", "message": "Partition check OK (recovery)", "checked_at": "2026-09-13T18:30:40.204355+00:00", "horizon_unit": "months", "reference_date": "2026-09-13", "expected_horizon": 3, "missing_partitions": []}           | 2026-09-13 18:30:40.205206+00
+  3 | check  | events   | {"table": "lab03.events", "status": "OK", "message": "Partition check OK (recovery)", "checked_at": "2026-09-13T18:30:40.199439+00:00", "horizon_unit": "days", "reference_date": "2026-09-13", "expected_horizon": 3, "missing_partitions": []}               | 2026-09-13 18:30:40.203218+00
+  2 | create | Bookings | {"target": "Bookings", "created": [], "existing": 4, "required": 4}                                                                                                                                                                                            | 2026-09-13 18:30:40.197656+00
+  1 | create | events   | {"target": "events", "created": ["events_2026_09_16"], "existing": 3, "required": 4}                                                                                                                                                                           | 2026-09-13 18:30:40.189498+00
+(16 rows)
+
+  target  |                fingerprint                 |          checked_at           
+----------+--------------------------------------------+-------------------------------
+ Bookings | {"status": "OK", "missing_partitions": []} | 2026-09-13 18:32:06.115898+00
+ events   | {"status": "OK", "missing_partitions": []} | 2026-09-13 18:31:54.081553+00
+(2 rows)
+
+ id |  target  |                                                                                                                            payload                                                                                                                             |         delivered_at          
+----+----------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------
+ 12 | Bookings | {"table": "lab03.Bookings", "status": "OK", "message": "Partition check OK (recovery)", "checked_at": "2026-09-13T18:32:04.109105+00:00", "horizon_unit": "months", "reference_date": "2026-09-13", "expected_horizon": 3, "missing_partitions": []}           | 2026-09-13 18:32:04.56666+00
+ 11 | Bookings | {"table": "lab03.Bookings", "status": "CRITICAL", "message": "Partition alert", "checked_at": "2026-09-13T18:31:58.101487+00:00", "horizon_unit": "months", "reference_date": "2026-09-13", "expected_horizon": 3, "missing_partitions": ["bookings_2026_12"]} | 2026-09-13 18:32:00.651633+00
+ 10 | events   | {"table": "lab03.events", "status": "OK", "message": "Partition check OK (recovery)", "checked_at": "2026-09-13T18:31:52.080291+00:00", "horizon_unit": "days", "reference_date": "2026-09-13", "expected_horizon": 3, "missing_partitions": []}               | 2026-09-13 18:31:52.646963+00
+  9 | events   | {"table": "lab03.events", "status": "CRITICAL", "message": "Partition alert", "checked_at": "2026-09-13T18:31:46.068313+00:00", "horizon_unit": "days", "reference_date": "2026-09-13", "expected_horizon": 3, "missing_partitions": ["events_2026_09_16"]}    | 2026-09-13 18:31:49.31852+00
+  6 | Bookings | {"table": "lab03.Bookings", "status": "OK", "message": "Partition check OK (recovery)", "checked_at": "2026-09-12T08:32:51.805193+00:00", "horizon_unit": "months", "reference_date": "2026-09-11", "expected_horizon": 3, "missing_partitions": []}           | 2026-09-12 08:32:52.050929+00
+  5 | Bookings | {"table": "lab03.Bookings", "status": "CRITICAL", "message": "Partition alert", "checked_at": "2026-09-12T08:32:51.035754+00:00", "horizon_unit": "months", "reference_date": "2026-09-11", "expected_horizon": 3, "missing_partitions": ["bookings_2026_12"]} | 2026-09-12 08:32:51.282549+00
+  4 | events   | {"table": "lab03.events", "status": "OK", "message": "Partition check OK (recovery)", "checked_at": "2026-09-12T08:32:49.436673+00:00", "horizon_unit": "days", "reference_date": "2026-09-11", "expected_horizon": 3, "missing_partitions": []}               | 2026-09-12 08:32:49.682465+00
+  1 | events   | {"table": "lab03.events", "status": "CRITICAL", "message": "Partition alert", "checked_at": "2026-09-12T08:32:48.224263+00:00", "horizon_unit": "days", "reference_date": "2026-09-11", "expected_horizon": 3, "missing_partitions": ["events_2026_09_14"]}    | 2026-09-12 08:32:48.927519+00
+(8 rows)
+

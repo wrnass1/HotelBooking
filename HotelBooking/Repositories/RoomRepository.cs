@@ -2,16 +2,19 @@ using Microsoft.EntityFrameworkCore;
 using HotelBooking.Data;
 using HotelBooking.Models.Entities;
 using HotelBooking.Repositories.Interfaces;
+using HotelBooking.Sharding;
 
 namespace HotelBooking.Repositories;
 
 public class RoomRepository : IRoomRepository
 {
     private readonly HotelBookingDbContext _context;
+    private readonly BookingShardStore? _bookingShards;
 
-    public RoomRepository(HotelBookingDbContext context)
+    public RoomRepository(HotelBookingDbContext context, BookingShardStore? bookingShards = null)
     {
         _context = context;
+        _bookingShards = bookingShards;
     }
 
     public async Task<IEnumerable<Room>> GetAllAsync()
@@ -58,6 +61,8 @@ public class RoomRepository : IRoomRepository
         if (room == null)
             return false;
 
+        if (_bookingShards != null && await _bookingShards.AnyAsync("\"RoomId\"=@RoomId", new { RoomId = id }))
+            throw new InvalidOperationException("Cannot delete a room with bookings on shards.");
         _context.Rooms.Remove(room);
         await _context.SaveChangesAsync();
         return true;
@@ -70,6 +75,13 @@ public class RoomRepository : IRoomRepository
 
     public async Task<IEnumerable<Room>> GetAvailableRoomsAsync(int hotelId, DateTime checkIn, DateTime checkOut)
     {
+        if (_bookingShards != null)
+        {
+            var busy = await _bookingShards.BusyRoomsAsync(checkIn, checkOut);
+            return await _context.Rooms.Include(r => r.Hotel)
+                .Where(r => r.HotelId == hotelId && r.IsAvailable && !busy.Contains(r.Id)).ToListAsync();
+        }
+
         var bookedRoomIds = await _context.Bookings
             .Where(b => b.Status != "Cancelled" &&
                        ((b.CheckInDate <= checkIn && b.CheckOutDate > checkIn) ||

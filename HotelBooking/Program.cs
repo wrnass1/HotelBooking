@@ -15,6 +15,7 @@ using FluentValidation.AspNetCore;
 using HotelBooking.Validators;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Serilog;
+using HotelBooking.Sharding;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -98,6 +99,11 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<HotelBookingDbContext>(options =>
     options.UseNpgsql(connectionString));
 
+var readConnectionString = builder.Configuration.GetConnectionString("ReadConnection")
+    ?? throw new InvalidOperationException("Connection string 'ReadConnection' not found.");
+builder.Services.AddDbContext<HotelBookingReadDbContext>(options =>
+    options.UseNpgsql(readConnectionString));
+
 // Redis configuration
 var redisConnectionString = builder.Configuration.GetConnectionString("Redis")
     ?? builder.Configuration["Redis:ConnectionString"]
@@ -142,7 +148,14 @@ builder.Services.AddAuthorization(options =>
 // Repositories
 builder.Services.AddScoped<IHotelRepository, HotelRepository>();
 builder.Services.AddScoped<IRoomRepository, RoomRepository>();
-builder.Services.AddScoped<IBookingRepository, BookingRepository>();
+var shardingEnabled = builder.Configuration.GetValue<bool>("Sharding:Enabled");
+if (shardingEnabled)
+{
+    builder.Services.AddSingleton<BookingShardStore>();
+    builder.Services.AddScoped<IBookingRepository, ShardedBookingRepository>();
+}
+else
+    builder.Services.AddScoped<IBookingRepository, BookingRepository>();
 builder.Services.AddScoped<IBookingReportRepository, BookingReportRepository>();
 builder.Services.AddScoped<IFacilityRepository, FacilityRepository>();
 builder.Services.AddScoped<IAmenityRepository, AmenityRepository>();
@@ -170,6 +183,7 @@ builder.Services.AddValidatorsFromAssemblyContaining<CreateHotelDtoValidator>();
 // Health Checks
 builder.Services.AddHealthChecks()
     .AddNpgSql(connectionString, name: "postgresql", tags: new[] { "db", "sql", "postgresql" })
+    .AddNpgSql(readConnectionString, name: "postgresql-replica", tags: new[] { "db", "sql", "postgresql" })
     .AddRedis(redisConnectionString, name: "redis", tags: new[] { "cache", "redis" });
 
 // CORS
@@ -184,6 +198,15 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
+if (shardingEnabled)
+    await app.Services.GetRequiredService<BookingShardStore>().ValidateLayoutAsync();
+if (args.Contains("--lab05"))
+{
+    using var scope = app.Services.CreateScope();
+    await ShardingLab.RunAsync(scope.ServiceProvider, args);
+    return;
+}
 
 // Configure the HTTP request pipeline
 app.UseMiddleware<ErrorHandlingMiddleware>();

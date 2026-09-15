@@ -3,6 +3,7 @@ using Dapper;
 using HotelBooking.Data;
 using HotelBooking.Repositories.Interfaces;
 using Npgsql;
+using HotelBooking.Sharding;
 
 namespace HotelBooking.Repositories;
 
@@ -10,18 +11,42 @@ public class BookingReportRepository : IBookingReportRepository
 {
     private readonly string _connectionString;
     private readonly ILogger<BookingReportRepository> _logger;
+    private readonly BookingShardStore? _bookingShards;
 
-    public BookingReportRepository(IConfiguration configuration, ILogger<BookingReportRepository> logger)
+    public BookingReportRepository(IConfiguration configuration, ILogger<BookingReportRepository> logger,
+        BookingShardStore? bookingShards = null)
     {
         _connectionString = configuration.GetConnectionString("DefaultConnection") 
             ?? throw new InvalidOperationException("Connection string not found");
         _logger = logger;
+        _bookingShards = bookingShards;
     }
 
     public async Task<BookingStatisticsDto> GetBookingStatisticsAsync(int hotelId, DateTime startDate, DateTime endDate)
     {
         using var connection = new NpgsqlConnection(_connectionString);
         await connection.OpenAsync();
+
+        if (_bookingShards != null)
+        {
+            var roomIds = (await connection.QueryAsync<int>(
+                "SELECT \"Id\" FROM public.\"Rooms\" WHERE \"HotelId\"=@HotelId", new { HotelId = hotelId })).ToArray();
+            var bookings = await _bookingShards.ReadAsync("""
+                "RoomId"=ANY(@RoomIds) AND "CheckInDate" >= @StartDate::date AND "CheckInDate" <= @EndDate::date
+                """, new { RoomIds = roomIds, StartDate = startDate.Date, EndDate = endDate.Date });
+            return new BookingStatisticsDto
+            {
+                TotalBookings = bookings.Count,
+                TotalRevenue = bookings.Sum(b => b.TotalPrice),
+                AverageBookingValue = bookings.Count == 0 ? 0 : bookings.Average(b => b.TotalPrice),
+                ConfirmedBookings = bookings.Count(b => b.Status == "Confirmed"),
+                CancelledBookings = bookings.Count(b => b.Status == "Cancelled"),
+                BookingsByStatus = bookings.GroupBy(b => b.Status).ToDictionary(g => g.Key, g => g.Count()),
+                RevenueByMonth = bookings.Where(b => b.Status != "Cancelled")
+                    .GroupBy(b => b.CheckInDate.ToString("yyyy-MM", System.Globalization.CultureInfo.InvariantCulture))
+                    .ToDictionary(g => g.Key, g => g.Sum(b => b.TotalPrice))
+            };
+        }
 
         using var transaction = connection.BeginTransaction();
         try
