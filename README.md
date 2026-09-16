@@ -68,6 +68,9 @@ docker-compose up -d
 Сравнение с Consistent Hashing запускается внутри самого backend командой
 `docker exec hotelbooking-api dotnet HotelBooking.dll --lab05 compare`.
 
+Анализ запросов после шардирования, проверка агрегации, JOIN, top-100 и отказа одного шарда
+описаны в [лабораторной №6](docs/lab-06-after-sharding-report.md).
+
 ### Доступ к API
 
 - **Swagger UI**: http://localhost:8080/swagger

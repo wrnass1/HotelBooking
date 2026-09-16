@@ -1,0 +1,463 @@
+{
+  "utc": "2026-09-16T06:13:41.029456+00:00",
+  "dataset": "Existing lab05 hotel; no writes or seeding",
+  "layout": {
+    "hotelId": 4,
+    "rooms": 100,
+    "fingerprint": "sha256-u64be-v1|Modulo|1|shard-0,shard-1,shard-2",
+    "allCounts": {
+      "0": 33219,
+      "1": 33353,
+      "2": 33428
+    },
+    "selectedCounts": {
+      "0": 33219,
+      "1": 33353,
+      "2": 33428
+    }
+  },
+  "singleShard": {
+    "id": 5,
+    "routedShard": "2",
+    "http": {
+      "path": "/api/Bookings/5",
+      "status": 200,
+      "elapsedMs": 1362.394,
+      "summary": {
+        "id": 5,
+        "hotelName": "Lab05 Sharding Hotel",
+        "status": "Confirmed"
+      }
+    },
+    "plan": [
+      {
+        "QUERY PLAN": [
+          {
+            "Plan": {
+              "Node Type": "Index Scan",
+              "Parallel Aware": false,
+              "Async Capable": false,
+              "Scan Direction": "Forward",
+              "Index Name": "Bookings_pkey",
+              "Relation Name": "Bookings",
+              "Alias": "Bookings",
+              "Startup Cost": 0.29,
+              "Total Cost": 8.31,
+              "Plan Rows": 1,
+              "Plan Width": 220,
+              "Actual Startup Time": 0.1,
+              "Actual Total Time": 0.101,
+              "Actual Rows": 1,
+              "Actual Loops": 1,
+              "Index Cond": "(\"Id\" = '5'::smallint)",
+              "Rows Removed by Index Recheck": 0,
+              "Shared Hit Blocks": 4,
+              "Shared Read Blocks": 2,
+              "Shared Dirtied Blocks": 0,
+              "Shared Written Blocks": 0,
+              "Local Hit Blocks": 0,
+              "Local Read Blocks": 0,
+              "Local Dirtied Blocks": 0,
+              "Local Written Blocks": 0,
+              "Temp Read Blocks": 0,
+              "Temp Written Blocks": 0
+            },
+            "Planning": {
+              "Shared Hit Blocks": 138,
+              "Shared Read Blocks": 0,
+              "Shared Dirtied Blocks": 0,
+              "Shared Written Blocks": 0,
+              "Local Hit Blocks": 0,
+              "Local Read Blocks": 0,
+              "Local Dirtied Blocks": 0,
+              "Local Written Blocks": 0,
+              "Temp Read Blocks": 0,
+              "Temp Written Blocks": 0
+            },
+            "Planning Time": 0.726,
+            "Triggers": [],
+            "Execution Time": 0.181
+          }
+        ]
+      }
+    ]
+  },
+  "aggregation": {
+    "perShard": {
+      "0": [
+        {
+          "Status": "Cancelled",
+          "n": 3457,
+          "total": "691400.00",
+          "average": "200.0000000000000000"
+        },
+        {
+          "Status": "Confirmed",
+          "n": 29762,
+          "total": "5952400.00",
+          "average": "200.0000000000000000"
+        }
+      ],
+      "1": [
+        {
+          "Status": "Cancelled",
+          "n": 3289,
+          "total": "657800.00",
+          "average": "200.0000000000000000"
+        },
+        {
+          "Status": "Confirmed",
+          "n": 30064,
+          "total": "6012800.00",
+          "average": "200.0000000000000000"
+        }
+      ],
+      "2": [
+        {
+          "Status": "Cancelled",
+          "n": 3254,
+          "total": "650800.00",
+          "average": "200.0000000000000000"
+        },
+        {
+          "Status": "Confirmed",
+          "n": 30174,
+          "total": "6034800.00",
+          "average": "200.0000000000000000"
+        }
+      ]
+    },
+    "merged": {
+      "Cancelled": {
+        "count": 10000,
+        "total": "2000000.00"
+      },
+      "Confirmed": {
+        "count": 90000,
+        "total": "18000000.00"
+      }
+    },
+    "count": 100000,
+    "sum": "20000000.00",
+    "average": "200.00",
+    "revenueByMonth": {
+      "2030-01": "288000.00",
+      "2030-02": "252000.00",
+      "2030-03": "270000.00",
+      "2030-04": "270000.00",
+      "2030-05": "288000.00",
+      "2030-06": "270000.00",
+      "2030-07": "270000.00",
+      "2030-08": "288000.00",
+      "2030-09": "270000.00",
+      "2030-10": "270000.00",
+      "2030-11": "270000.00",
+      "2030-12": "288000.00",
+      "2031-01": "270000.00",
+      "2031-02": "252000.00",
+      "2031-03": "288000.00",
+      "2031-04": "270000.00",
+      "2031-05": "270000.00",
+      "2031-06": "270000.00",
+      "2031-07": "288000.00",
+      "2031-08": "270000.00",
+      "2031-09": "270000.00",
+      "2031-10": "288000.00",
+      "2031-11": "270000.00",
+      "2031-12": "270000.00",
+      "2032-01": "288000.00",
+      "2032-02": "252000.00",
+      "2032-03": "288000.00",
+      "2032-04": "270000.00",
+      "2032-05": "270000.00",
+      "2032-06": "270000.00",
+      "2032-07": "288000.00",
+      "2032-08": "270000.00",
+      "2032-09": "270000.00",
+      "2032-10": "288000.00",
+      "2032-11": "270000.00",
+      "2032-12": "270000.00",
+      "2033-01": "288000.00",
+      "2033-02": "252000.00",
+      "2033-03": "270000.00",
+      "2033-04": "270000.00",
+      "2033-05": "288000.00",
+      "2033-06": "270000.00",
+      "2033-07": "270000.00",
+      "2033-08": "288000.00",
+      "2033-09": "270000.00",
+      "2033-10": "270000.00",
+      "2033-11": "270000.00",
+      "2033-12": "288000.00",
+      "2034-01": "270000.00",
+      "2034-02": "252000.00",
+      "2034-03": "288000.00",
+      "2034-04": "270000.00",
+      "2034-05": "270000.00",
+      "2034-06": "270000.00",
+      "2034-07": "288000.00",
+      "2034-08": "270000.00",
+      "2034-09": "270000.00",
+      "2034-10": "288000.00",
+      "2034-11": "270000.00",
+      "2034-12": "270000.00",
+      "2035-01": "288000.00",
+      "2035-02": "252000.00",
+      "2035-03": "270000.00",
+      "2035-04": "270000.00",
+      "2035-05": "288000.00",
+      "2035-06": "198000.00"
+    },
+    "transferredGroupRows": 6,
+    "fullRowReferenceCount": 100000,
+    "averageCounterexample": {
+      "shardCounts": [
+        1,
+        3
+      ],
+      "shardSums": [
+        10,
+        90
+      ],
+      "wrongMeanOfMeans": 20,
+      "correctWeightedMean": 25
+    }
+  },
+  "join": {
+    "localJoinError": {
+      "sqlstate": "42P01",
+      "message": "relation \"public.Rooms\" does not exist"
+    },
+    "bookings": 100000,
+    "distinctRooms": 100,
+    "example": {
+      "booking": {
+        "Id": 5,
+        "RoomId": 5,
+        "TotalPrice": "200.00",
+        "Status": "Confirmed",
+        "CheckInDate": "2030-01-01"
+      },
+      "roomOnPrimary": {
+        "Id": 5,
+        "RoomNumber": "L05-004",
+        "hotel_name": "Lab05 Sharding Hotel"
+      }
+    },
+    "primaryBookingsCount": 0
+  },
+  "top100": {
+    "order": "CheckInDate DESC, Id DESC",
+    "candidates": 300,
+    "mergedIds": [
+      100000,
+      99999,
+      99998,
+      99997,
+      99996,
+      99995,
+      99994,
+      99993,
+      99992,
+      99991,
+      99990,
+      99989,
+      99988,
+      99987,
+      99986,
+      99985,
+      99984,
+      99983,
+      99982,
+      99981,
+      99980,
+      99979,
+      99978,
+      99977,
+      99976,
+      99975,
+      99974,
+      99973,
+      99972,
+      99971,
+      99970,
+      99969,
+      99968,
+      99967,
+      99966,
+      99965,
+      99964,
+      99963,
+      99962,
+      99961,
+      99960,
+      99959,
+      99958,
+      99957,
+      99956,
+      99955,
+      99954,
+      99953,
+      99952,
+      99951,
+      99950,
+      99949,
+      99948,
+      99947,
+      99946,
+      99945,
+      99944,
+      99943,
+      99942,
+      99941,
+      99940,
+      99939,
+      99938,
+      99937,
+      99936,
+      99935,
+      99934,
+      99933,
+      99932,
+      99931,
+      99930,
+      99929,
+      99928,
+      99927,
+      99926,
+      99925,
+      99924,
+      99923,
+      99922,
+      99921,
+      99920,
+      99919,
+      99918,
+      99917,
+      99916,
+      99915,
+      99914,
+      99913,
+      99912,
+      99911,
+      99910,
+      99909,
+      99908,
+      99907,
+      99906,
+      99905,
+      99904,
+      99903,
+      99902,
+      99901
+    ],
+    "contribution": {
+      "2": 25,
+      "0": 41,
+      "1": 34
+    },
+    "missingIfOnlyOneShard": {
+      "0": 59,
+      "1": 66,
+      "2": 75
+    },
+    "matchesFullSort": true
+  },
+  "timing": {
+    "method": "Five warm runs; includes connect, SQL, transfer, Python reduction and thread pool creation. Same three local containers; subsets contain different amounts of data, not a resharding scalability benchmark.",
+    "measurements": [
+      {
+        "shards": 1,
+        "mode": "sequential",
+        "rowsCovered": 33219,
+        "samplesMs": [
+          52.334,
+          67.757,
+          36.906,
+          37.519,
+          38.383
+        ],
+        "medianMs": 38.383
+      },
+      {
+        "shards": 1,
+        "mode": "parallel",
+        "rowsCovered": 33219,
+        "samplesMs": [
+          58.015,
+          45.521,
+          42.126,
+          39.727,
+          78.548
+        ],
+        "medianMs": 45.521
+      },
+      {
+        "shards": 2,
+        "mode": "sequential",
+        "rowsCovered": 66572,
+        "samplesMs": [
+          82.832,
+          82.227,
+          155.251,
+          108.615,
+          83.137
+        ],
+        "medianMs": 83.137
+      },
+      {
+        "shards": 2,
+        "mode": "parallel",
+        "rowsCovered": 66572,
+        "samplesMs": [
+          58.565,
+          52.95,
+          55.88,
+          55.877,
+          64.47
+        ],
+        "medianMs": 55.88
+      },
+      {
+        "shards": 3,
+        "mode": "sequential",
+        "rowsCovered": 100000,
+        "samplesMs": [
+          162.337,
+          179.248,
+          128.33,
+          138.534,
+          125.314
+        ],
+        "medianMs": 138.534
+      },
+      {
+        "shards": 3,
+        "mode": "parallel",
+        "rowsCovered": 100000,
+        "samplesMs": [
+          77.996,
+          87.036,
+          65.818,
+          75.212,
+          61.124
+        ],
+        "medianMs": 75.212
+      }
+    ]
+  },
+  "hotShard": {
+    "method": "1000 real sequential point reads, persistent connections, deterministic synthetic 10/15/75 workload; not production traffic or a saturation test.",
+    "requests": {
+      "2": 750,
+      "1": 150,
+      "0": 100
+    },
+    "sqlElapsedMs": {
+      "2": 633.449,
+      "1": 129.022,
+      "0": 94.141
+    }
+  },
+  "passed": true
+}

@@ -1,0 +1,85 @@
+{
+  "passed": true,
+  "statements": [
+    {
+      "statement": 1,
+      "target": "primary",
+      "rowsReturned": 1
+    },
+    {
+      "statement": 2,
+      "target": "primary",
+      "rowsReturned": 1
+    },
+    {
+      "statement": 3,
+      "target": "primary",
+      "rowsReturned": 1
+    },
+    {
+      "statement": 4,
+      "target": "shard-2",
+      "rowsReturned": 7
+    },
+    {
+      "statement": 5,
+      "target": "shard-2",
+      "rowsReturned": 1
+    },
+    {
+      "statement": 6,
+      "target": "shard-0",
+      "rowsReturned": 2
+    },
+    {
+      "statement": 6,
+      "target": "shard-1",
+      "rowsReturned": 2
+    },
+    {
+      "statement": 6,
+      "target": "shard-2",
+      "rowsReturned": 2
+    },
+    {
+      "statement": 7,
+      "target": "shard-0",
+      "rowsReturned": 66
+    },
+    {
+      "statement": 7,
+      "target": "shard-1",
+      "rowsReturned": 66
+    },
+    {
+      "statement": 7,
+      "target": "shard-2",
+      "rowsReturned": 66
+    },
+    {
+      "statement": 8,
+      "target": "shard-0",
+      "rowsReturned": 100
+    },
+    {
+      "statement": 8,
+      "target": "shard-1",
+      "rowsReturned": 100
+    },
+    {
+      "statement": 8,
+      "target": "shard-2",
+      "rowsReturned": 100
+    },
+    {
+      "statement": 9,
+      "target": "replica",
+      "rowsReturned": 1
+    },
+    {
+      "statement": 10,
+      "target": "primary",
+      "rowsReturned": 1
+    }
+  ]
+}

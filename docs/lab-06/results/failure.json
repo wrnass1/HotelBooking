@@ -1,0 +1,305 @@
+{
+  "utc": "2026-09-16T06:13:47.680649+00:00",
+  "container": "hotelbooking-shard-2",
+  "before": [
+    {
+      "path": "/api/Bookings/6",
+      "status": 200,
+      "elapsedMs": 53.698,
+      "summary": {
+        "id": 6,
+        "hotelName": "Lab05 Sharding Hotel",
+        "status": "Confirmed"
+      }
+    },
+    {
+      "path": "/api/Bookings/1",
+      "status": 200,
+      "elapsedMs": 87.991,
+      "summary": {
+        "id": 1,
+        "hotelName": "Lab05 Sharding Hotel",
+        "status": "Cancelled"
+      }
+    },
+    {
+      "path": "/api/Bookings/5",
+      "status": 200,
+      "elapsedMs": 7.053,
+      "summary": {
+        "id": 5,
+        "hotelName": "Lab05 Sharding Hotel",
+        "status": "Confirmed"
+      }
+    },
+    {
+      "path": "/api/Bookings",
+      "status": 200,
+      "elapsedMs": 1421.578,
+      "summary": {
+        "rows": 100000
+      }
+    },
+    {
+      "path": "/api/Bookings/room/1",
+      "status": 200,
+      "elapsedMs": 31.346,
+      "summary": {
+        "rows": 1000
+      }
+    },
+    {
+      "path": "/api/Bookings/guest/lab05.booking.000001%40example.test",
+      "status": 200,
+      "elapsedMs": 28.759,
+      "summary": {
+        "rows": 1
+      }
+    },
+    {
+      "path": "/api/Rooms/available?hotelId=4&checkIn=2030-01-01&checkOut=2030-01-02",
+      "status": 200,
+      "elapsedMs": 215.684,
+      "summary": {
+        "rows": 10
+      }
+    },
+    {
+      "path": "/api/Hotels?page=1&pageSize=2",
+      "status": 200,
+      "elapsedMs": 269.152,
+      "summary": {
+        "total": 1
+      }
+    },
+    {
+      "path": "/health",
+      "status": 200,
+      "elapsedMs": 29.18,
+      "summary": {
+        "status": "Healthy",
+        "checks": [
+          {
+            "name": "postgresql",
+            "status": "Healthy",
+            "description": null
+          },
+          {
+            "name": "postgresql-replica",
+            "status": "Healthy",
+            "description": null
+          },
+          {
+            "name": "redis",
+            "status": "Healthy",
+            "description": null
+          }
+        ]
+      }
+    }
+  ],
+  "during": [
+    {
+      "path": "/api/Bookings/6",
+      "status": 200,
+      "elapsedMs": 8.645,
+      "summary": {
+        "id": 6,
+        "hotelName": "Lab05 Sharding Hotel",
+        "status": "Confirmed"
+      }
+    },
+    {
+      "path": "/api/Bookings/1",
+      "status": 200,
+      "elapsedMs": 20.572,
+      "summary": {
+        "id": 1,
+        "hotelName": "Lab05 Sharding Hotel",
+        "status": "Cancelled"
+      }
+    },
+    {
+      "path": "/api/Bookings/5",
+      "status": 500,
+      "elapsedMs": 34.112,
+      "summary": {
+        "error": "InternalServerError",
+        "message": "57P01: terminating connection due to administrator command"
+      }
+    },
+    {
+      "path": "/api/Bookings",
+      "status": 500,
+      "elapsedMs": 4040.104,
+      "summary": {
+        "error": "InternalServerError",
+        "message": "Name or service not known"
+      }
+    },
+    {
+      "path": "/api/Bookings/room/1",
+      "status": 500,
+      "elapsedMs": 4045.761,
+      "summary": {
+        "error": "InternalServerError",
+        "message": "Name or service not known"
+      }
+    },
+    {
+      "path": "/api/Bookings/guest/lab05.booking.000001%40example.test",
+      "status": 500,
+      "elapsedMs": 4020.193,
+      "summary": {
+        "error": "InternalServerError",
+        "message": "Name or service not known"
+      }
+    },
+    {
+      "path": "/api/Rooms/available?hotelId=4&checkIn=2030-01-01&checkOut=2030-01-02",
+      "status": 500,
+      "elapsedMs": 4023.248,
+      "summary": {
+        "error": "InternalServerError",
+        "message": "Name or service not known"
+      }
+    },
+    {
+      "path": "/api/Hotels?page=1&pageSize=2",
+      "status": 200,
+      "elapsedMs": 15.943,
+      "summary": {
+        "total": 1
+      }
+    },
+    {
+      "path": "/health",
+      "status": 200,
+      "elapsedMs": 6.347,
+      "summary": {
+        "status": "Healthy",
+        "checks": [
+          {
+            "name": "postgresql",
+            "status": "Healthy",
+            "description": null
+          },
+          {
+            "name": "postgresql-replica",
+            "status": "Healthy",
+            "description": null
+          },
+          {
+            "name": "redis",
+            "status": "Healthy",
+            "description": null
+          }
+        ]
+      }
+    }
+  ],
+  "after": [
+    {
+      "path": "/api/Bookings/6",
+      "status": 200,
+      "elapsedMs": 27.755,
+      "summary": {
+        "id": 6,
+        "hotelName": "Lab05 Sharding Hotel",
+        "status": "Confirmed"
+      }
+    },
+    {
+      "path": "/api/Bookings/1",
+      "status": 200,
+      "elapsedMs": 32.167,
+      "summary": {
+        "id": 1,
+        "hotelName": "Lab05 Sharding Hotel",
+        "status": "Cancelled"
+      }
+    },
+    {
+      "path": "/api/Bookings/5",
+      "status": 200,
+      "elapsedMs": 17.622,
+      "summary": {
+        "id": 5,
+        "hotelName": "Lab05 Sharding Hotel",
+        "status": "Confirmed"
+      }
+    },
+    {
+      "path": "/api/Bookings",
+      "status": 200,
+      "elapsedMs": 862.924,
+      "summary": {
+        "rows": 100000
+      }
+    },
+    {
+      "path": "/api/Bookings/room/1",
+      "status": 200,
+      "elapsedMs": 13.363,
+      "summary": {
+        "rows": 1000
+      }
+    },
+    {
+      "path": "/api/Bookings/guest/lab05.booking.000001%40example.test",
+      "status": 200,
+      "elapsedMs": 26.621,
+      "summary": {
+        "rows": 1
+      }
+    },
+    {
+      "path": "/api/Rooms/available?hotelId=4&checkIn=2030-01-01&checkOut=2030-01-02",
+      "status": 200,
+      "elapsedMs": 16.054,
+      "summary": {
+        "rows": 10
+      }
+    },
+    {
+      "path": "/api/Hotels?page=1&pageSize=2",
+      "status": 200,
+      "elapsedMs": 6.735,
+      "summary": {
+        "total": 1
+      }
+    },
+    {
+      "path": "/health",
+      "status": 200,
+      "elapsedMs": 4.356,
+      "summary": {
+        "status": "Healthy",
+        "checks": [
+          {
+            "name": "postgresql",
+            "status": "Healthy",
+            "description": null
+          },
+          {
+            "name": "postgresql-replica",
+            "status": "Healthy",
+            "description": null
+          },
+          {
+            "name": "redis",
+            "status": "Healthy",
+            "description": null
+          }
+        ]
+      }
+    }
+  ],
+  "containerRestored": true,
+  "countsAfter": {
+    "0": 33219,
+    "1": 33353,
+    "2": 33428
+  },
+  "passed": true
+}
